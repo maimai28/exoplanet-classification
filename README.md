@@ -1,20 +1,39 @@
 # Exoplanet Classification: Terrestrial vs. Gas Giant
 
 Binary classification of exoplanets into `terrestrial` or `gas_giant` from
-six bulk and stellar host parameters, using `exoplanets_clean.csv` (623
+five bulk and stellar host parameters, using `exoplanets_clean.csv` (623
 planets, no missing values).
 
 ## Data
 
-| Column | Description |
-|---|---|
-| `mass` | Planet mass (Jupiter masses) |
-| `radius` | Planet radius (Jupiter radii) |
-| `orbital_period` | Orbital period (days) |
-| `star_mass` | Host star mass (solar masses) |
-| `star_radius` | Host star radius (solar radii) |
-| `star_teff` | Host star effective temperature (K) |
-| `planet_type` | Target: `terrestrial` or `gas_giant` |
+| Column | Description | Used as feature? |
+|---|---|---|
+| `mass` | Planet mass (Jupiter masses) | yes |
+| `radius` | Planet radius (Jupiter radii) | **no — see below** |
+| `orbital_period` | Orbital period (days) | yes |
+| `star_mass` | Host star mass (solar masses) | yes |
+| `star_radius` | Host star radius (solar radii) | yes |
+| `star_teff` | Host star effective temperature (K) | yes |
+| `planet_type` | Target: `terrestrial` or `gas_giant` | target |
+
+### Why `radius` is excluded (data leakage)
+
+`radius` almost perfectly separates the two classes on its own: the
+largest terrestrial planet in the data has `radius = 0.178000` (Jupiter
+radii), the smallest gas giant has `radius = 0.178428` — a gap of
+**0.000428**. That boundary sits right at the ~1.5–2 R⊕ "radius valley"
+astronomers use to distinguish rocky planets from gas-rich ones, which is
+strong evidence that `planet_type` in this cleaned dataset was itself
+*generated* from a `radius` threshold rather than being an independent,
+observationally-derived label.
+
+That makes `radius` a **leaked feature**: a model trained on it isn't
+learning a relationship between planetary/stellar parameters and
+composition, it's recovering the threshold rule used to build the label —
+something an unseen, non-thresholded catalog wouldn't hand it for free. So
+`radius` is dropped from `FEATURES`, and the notebook includes a cell that
+reproduces the gap above before training on the remaining five columns:
+`mass`, `orbital_period`, `star_mass`, `star_radius`, `star_teff`.
 
 ## Class imbalance
 
@@ -45,8 +64,10 @@ minority class is the actually interesting task.
 
 1. Load and inspect `exoplanets_clean.csv` (shape, dtypes, missing-value
    check, class counts).
-2. Stratified 80/20 train/test split (498 / 125 rows), `random_state=42`.
-3. Three classifiers, each with `class_weight='balanced'`:
+2. Check and exclude `radius` as a leaked feature (see above), leaving
+   `mass`, `orbital_period`, `star_mass`, `star_radius`, `star_teff`.
+3. Stratified 80/20 train/test split (498 / 125 rows), `random_state=42`.
+4. Three classifiers, each with `class_weight='balanced'`:
    - **Logistic Regression** — `StandardScaler` + `LogisticRegression`, in a
      `Pipeline` (scale-sensitive).
    - **Random Forest** — `RandomForestClassifier(n_estimators=300)`, trained
@@ -55,47 +76,53 @@ minority class is the actually interesting task.
      (scale-sensitive).
    Scaling is fit on the training split only, inside each `Pipeline`, so no
    test-set information leaks into the transform.
-4. Evaluate on the held-out test set: accuracy, and precision/recall/F1 for
+5. Evaluate on the held-out test set: accuracy, and precision/recall/F1 for
    the `terrestrial` class, plus a full `classification_report` and
    confusion matrix per model.
-5. Compare all three models in a table and a grouped bar chart.
+6. Compare all three models in a table and a grouped bar chart.
 
 ## Results
 
+Without `radius`, scores drop substantially across all three models — this
+is the expected, honest result once the leaked feature is gone:
+
 | Model | Accuracy | Precision (terrestrial) | Recall (terrestrial) | F1 (terrestrial) |
 |---|---|---|---|---|
-| Logistic Regression | 0.896 | 0.567 | 1.000 | 0.723 |
-| Random Forest | 1.000 | 1.000 | 1.000 | 1.000 |
-| SVM (RBF) | 0.864 | 0.500 | 1.000 | 0.667 |
+| Logistic Regression | 0.720 | 0.275 | 0.647 | 0.386 |
+| Random Forest | 0.912 | 0.636 | 0.824 | 0.718 |
+| SVM (RBF) | 0.784 | 0.292 | 0.412 | 0.341 |
 
-**Random Forest's perfect score is a property of this dataset, not a
-generalization claim.** `radius` alone almost perfectly separates the two
-classes: the largest terrestrial planet in the data has `radius = 0.178`
-(Jupiter radii), the smallest gas giant has `radius = 0.1784` — a gap of
-less than 0.001. That boundary sits right at the observed ~1.5–2 R⊕
-"radius valley" astronomers use to distinguish rocky planets from
-gas-rich ones, which strongly suggests `planet_type` in this cleaned
-dataset was itself generated from a radius (and/or mass) threshold. A
-tree-based model finds and exploits that single-feature split trivially,
-so 1.000 here reflects a near-deterministic label rule, not evidence that
-Random Forest would generalize this well on a raw, un-thresholded
-observational catalog.
+(For reference, training with `radius` included — the leaky version —
+gave Random Forest a literal 1.000 on every metric, and pushed Logistic
+Regression/SVM to 0.896/0.864 accuracy. Those numbers were an artifact of
+`radius` encoding the label-generation threshold, not a real signal; they
+are not reproducible on data that doesn't share that construction.)
 
-Logistic Regression and SVM don't reach 1.000 because their decision
-boundaries (linear, and RBF in scaled multi-feature space) don't isolate
-that single threshold as cleanly — and `class_weight='balanced'` pushes
-both of them to **100% recall on `terrestrial` at the cost of precision**
-(0.567 and 0.500): they over-predict the minority class near the boundary,
-catching every real terrestrial planet but also flagging some borderline
-gas giants as terrestrial. This is the expected trade-off from balanced
-class weights, not a bug.
+**Random Forest is still the best model, but no longer trivially perfect** —
+0.912 accuracy, 0.718 F1 on the minority class. Without the single
+near-deterministic feature to split on, it has to combine `mass`,
+`orbital_period`, and the three stellar parameters, and it does that
+better than the other two: mass and orbital period alone carry real
+information about planet type (short-period, low-mass rocky planets vs.
+longer-period, higher-mass giants), just not a clean single-feature
+threshold.
 
-**Takeaway:** on this dataset, `radius` is close to a sufficient statistic
-for `planet_type`. Random Forest's F1 = 1.000 should be read as "the
-classes are nearly linearly separable in this feature," not as a
-benchmark result — the more informative comparison is Logistic Regression
-vs. SVM, where both trade precision for recall in the same direction once
-`class_weight='balanced'` is applied.
+**Logistic Regression and SVM both struggle more here** (F1 = 0.386 and
+0.341) than Random Forest. `class_weight='balanced'` still shifts their
+decision boundaries toward recall — both catch more terrestrial planets
+than they'd get by chance (0.647 and 0.412 recall) — but at much lower
+precision (0.275, 0.292) than before, because without `radius` the classes
+are no longer close to linearly separable, and a linear/RBF boundary in
+the remaining five features overlaps the two classes considerably more
+than a tree's axis-aligned splits do.
+
+**Takeaway:** the pre-fix numbers were measuring how easily a model could
+recover a threshold rule, not how well it classifies exoplanets from
+physically independent parameters. The post-fix numbers are the honest
+baseline for this feature set — Random Forest is the model to build on,
+and there's real headroom left (0.636 precision on the minority class
+means over a third of its "terrestrial" predictions are false positives),
+which a leakage-free result should show.
 
 ## Setup
 
@@ -114,8 +141,8 @@ jupyter lab classification.ipynb
 
 ## Files
 
-- `classification.ipynb` — full analysis: EDA, split, three models, metrics,
-  confusion matrices, comparison.
+- `classification.ipynb` — full analysis: EDA, leakage check, split, three
+  models, metrics, confusion matrices, comparison.
 - `exoplanets_clean.csv` — source data.
 - `requirements.txt` — dependencies (unpinned, Python 3.14-compatible).
 - `pyproject.toml` — `uv` project file.

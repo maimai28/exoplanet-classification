@@ -1,0 +1,9 @@
+#!/bin/sh
+# Bloquea cualquier push a main. main solo cambia al hacer merge del PR en GitHub (P3).
+while read local_ref local_sha remote_ref remote_sha; do
+  if [ "$remote_ref" = "refs/heads/main" ]; then
+    echo "BLOQUEADO: push directo a main. Abre un pull request y haz el merge en GitHub (P3)."
+    exit 1
+  fi
+done
+exit 0

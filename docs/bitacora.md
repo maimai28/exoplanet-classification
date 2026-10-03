@@ -23,3 +23,4 @@ Aprobados los 4 puntos: CSV a data/raw/ con SHA-256, consulta T3 al NASA Exoplan
 ## 2026-10-02 — P1 aprobado en definitiva por Mai
 - Mai aprueba brief y plan con el diff presentado, incluidos los tres puntos que propuso el Arquitecto: 6 decimales fijos; esquemas de metrics_by_mass_provenance.json y grouping_report.json; tarea T4b (criterio 12) antes de T5.
 - Siguiente: T1 (Especialista, linaje).
+- 2026-10-02 — T0 cerrada. Horas de Mai acumuladas: 6h

@@ -49,3 +49,15 @@ Aprobados los 4 puntos: CSV a data/raw/ con SHA-256, consulta T3 al NASA Exoplan
 - (b) Se aprueban el formato `g:<row_id mínimo>` y las llaves nuevas de `grouping_report.json`.
 - (c) T3b puede leer, solo como lectura, la documentación web del NASA Exoplanet Archive y la literatura que cite. Quedan prohibidas las consultas TAP, la descarga de tablas y la instalación de dependencias. La relación M-R se implementa con los coeficientes publicados, y cada fuente se registra en `docs/decisiones.md` con su URL o DOI y la fecha de acceso.
 - Brief y plan actualizados. T6 ya puede empezar. Siguiente: T3b (Especialista).
+
+## 2026-10-13 — Arquitecto/Planificador — cambio del criterio 4 tras T3b (regla 6)
+- Mai cambia el criterio 4 tras ver el resultado de T3b (commit 43a9b14): si la tolerancia relativa por fila supera 0.10 (±10 % en masa) y la fila daría `on_relation`, `mr_status` = `not_testable` con motivo `low_precision`. Las `off_relation` se quedan así sin importar la tolerancia: una tolerancia amplia solo debilita una coincidencia, no una discrepancia (corrección de Mai al primer diff). El tramo 11.1 ≤ Rp < 14.3 R⊕ queda con motivo `gap_11.1_14.3`, que manda si aplican los dos (aprobado por Mai).
+- Contrato: `mr_predicted_mass` y `mr_rel_residual` quedan vacíos solo con `gap_11.1_14.3`; con `low_precision` se conservan como diagnóstico.
+- El umbral se fijó después de ver los resultados de T3b; se registra así en el brief y en `docs/decisiones.md`.
+- La regla de combinación `derived`/`measured`/`unverifiable` no cambia.
+- Contrato: nueva columna `not_testable_reason` en `mass_provenance.csv`.
+- T3b se re-ejecuta con el criterio nuevo. El Especialista registra en `docs/decisiones.md` el cambio, el umbral, la justificación de aplicarlo solo a coincidencias, que se fijó a posteriori, y GJ 1132 b (fila 53) y Kepler-68 b (fila 424) como posibles falsos `derived`. T4 espera a la re-ejecución.
+- Pendiente: aprobación de Mai del diff.
+
+## 2026-10-13 — Mai aprueba el diff del cambio al criterio 4 (regla 6)
+- Brief y plan actualizados. Siguiente: re-ejecución de T3b (Especialista), que incluye la sección en `docs/decisiones.md`. T4 espera a esa re-ejecución.

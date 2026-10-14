@@ -36,3 +36,16 @@ Aprobados los 4 puntos: CSV a data/raw/ con SHA-256, consulta T3 al NASA Exoplan
   - Criterio 13 cambia (regla 6): group_id = componente conexa de filas que comparten hostname O tupla estelar; ningún sistema puede quedar partido entre particiones. Pendiente de pasarlo al brief y al plan.
   - Filas frágiles: 12 (no 14); documentadas en decisiones.md, sin cambiar el contrato de lineage.csv.
   - Se acepta y registra la petición vacía extra a TAP/sync reportada por el agente; no se repite.
+
+## 2026-10-13 — Arquitecto/Planificador — decisiones de T3 pasadas al brief y al plan
+- Criterio 13: `group_id` = componente conexa (`hostname` O tupla exacta), formato `g:<row_id mínimo>`; la prueba exige igualdad con las componentes. `grouping_report.json` cambia de llaves (se quitan `n_by_hostname` y `n_by_tuple`).
+- Criterio 4: la masa de cada fila se clasifica como `measured`, `derived` o `unverifiable`. "No verificable" se aplica donde la masa no coincide a ±1 % con el Proyecto 1. `on_relation` de T3b manda; `off_relation` no basta para `measured`. El veredicto de `mass` sigue siendo de Mai (T4).
+- Nueva salida en el contrato: `data/processed/mass_provenance.csv`. Nueva tarea T3b (Especialista, [AGENTE]), sin consulta TAP nueva.
+- Orden: T3 → T3b → T4, T4b, T5.
+- Pendiente: aprobación de Mai del diff (regla 6). T6 no empieza hasta entonces.
+
+## 2026-10-13 — Mai aprueba el diff de T3 con ajustes (regla 6)
+- (a) Se aprueba la regla de combinación. T3b además reporta cuántas filas con `pl_bmassprov` = `Mass` quedan `on_relation`, como diagnóstico de la tolerancia.
+- (b) Se aprueban el formato `g:<row_id mínimo>` y las llaves nuevas de `grouping_report.json`.
+- (c) T3b puede leer, solo como lectura, la documentación web del NASA Exoplanet Archive y la literatura que cite. Quedan prohibidas las consultas TAP, la descarga de tablas y la instalación de dependencias. La relación M-R se implementa con los coeficientes publicados, y cada fuente se registra en `docs/decisiones.md` con su URL o DOI y la fecha de acceso.
+- Brief y plan actualizados. T6 ya puede empezar. Siguiente: T3b (Especialista).

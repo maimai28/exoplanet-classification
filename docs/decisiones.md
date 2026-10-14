@@ -159,3 +159,97 @@ Las filas 137/575 se disputan HATS-25 b, y 102/577 se disputan WASP-62 b; por es
 - `git mv exoplanets_clean.csv data/raw/exoplanets_clean.csv`. El blob no cambia: `c6671ce61c7c339a91699ead01c17f911a04afe1`, igual al de b316a47.
 - `data/raw/SHA256SUMS` usa el formato de `sha256sum` con la ruta relativa a `data/raw/`, así que se comprueba con `cd data/raw && sha256sum -c SHA256SUMS`. Valor: `15f10a81606288d4dec71a8380fff47451cd9f8b5346add5b1c34e79bb966378`, igual a `git show b316a47:exoplanets_clean.csv | sha256sum` y al que registró T1.
 - El notebook sigue leyendo `exoplanets_clean.csv` desde la raíz, así que **no corre entre T2 y T7**. No se tocó: cambiar la ruta de lectura es parte de T7.
+
+## T3 — Procedencia de la masa y `hostname` desde `pscomppars` (Especialista, 2026-10-13)
+
+### Consulta
+
+- Servicio: NASA Exoplanet Archive, TAP síncrono (`https://exoplanetarchive.ipac.caltech.edu/TAP/sync`), `POST`, `format=csv`. Pública, de solo lectura, sin credenciales (autorizada en P1).
+- Fecha: 2026-10-13 21:32 -0600 (2026-10-14T03:32:28Z).
+- ADQL: `select pl_name,hostname,pl_bmassprov from pscomppars where pl_name in (<los 521 pl_name con match_status = unique en lineage.csv de 94fb11b, entre comillas simples, en orden de row_id>) order by pl_name`. SHA-256 del texto exacto de la consulta (con `\n` final): `a79fd72171c36c1c0dd7ae13b021aa2ec422d33008dd58597c7573db9cf9b7dc`.
+- Filas devueltas: **521** (una por planeta pedido; ningún nombre faltó ni se repitió).
+- Respuesta guardada sin cambios en `data/raw/pscomppars_provenance_2026-10-13.csv`, SHA-256 `4d280c02823322a876d4321aec570643413d57bfc6c622c9b5b5ea9f714baacd`. Escrito una vez (regla 4); no se agregó a `SHA256SUMS`, que es de T2.
+
+Para reproducir:
+
+```bash
+names=$(awk -F, 'NR>1 && $4=="unique"{printf "%s'\''%s'\''", (n++?",":""), $2}' data/processed/lineage.csv)
+printf '%s\n' "select pl_name,hostname,pl_bmassprov from pscomppars where pl_name in ($names) order by pl_name" > query.adql
+curl -sS --fail -X POST https://exoplanetarchive.ipac.caltech.edu/TAP/sync \
+  --data-urlencode "query@query.adql" --data-urlencode "format=csv" -o resp.csv
+```
+
+Una nueva descarga puede dar otros valores: `pscomppars` cambia con el tiempo (ver "Deriva" abajo).
+
+### `lineage.csv`
+
+Solo cambió la columna `hostname`: se llenó, por `pl_name`, en las 521 filas `unique`; queda vacía en las 102 `none` + `ambiguous`, que van al respaldo `tuple:` del criterio 13 (decisión de Mai, bitácora 2026-10-02). `row_id`, `pl_name` y `match_status` son idénticos byte a byte a los de 94fb11b. No se dedujo `hostname` de `pl_name` ni de la tupla para las filas sin pareja.
+
+### Criterio de listo 1: filas por categoría de procedencia de la masa
+
+| `pl_bmassprov` | gas_giant | terrestrial | Total |
+|---|---|---|---|
+| `Mass` | 418 | 66 | 484 |
+| `M-R relationship` | 22 | 8 | 30 |
+| `Msini` | 7 | 0 | 7 |
+| Sin procedencia (`none` + `ambiguous`, sin `pl_name`) | 90 | 12 | 102 |
+| **Total** | 537 | 86 | 623 |
+
+Ninguna fila `unique` tiene `pl_bmassprov` vacío.
+
+**Deriva.** `pl_bmassprov` describe el valor de `pscomppars` **de hoy**, no necesariamente el valor de `mass` de nuestro CSV, que viene de una versión anterior (T1). Contra la `pl_bmassj` del Proyecto 1 (descarga del 2026-09-18), la `mass` de nuestro CSV coincide a 1 % en:
+
+| `pl_bmassprov` | coincide | no coincide |
+|---|---|---|
+| `Mass` | 234 | 250 |
+| `M-R relationship` | 1 | 29 |
+| `Msini` | 2 | 5 |
+
+Es decir, en 284 de las 521 filas la masa del CSV no es la masa a la que se refiere la etiqueta de procedencia.
+
+### Criterio de listo 2: colisiones entre `hostname` y la tupla estelar
+
+Tupla = (`star_mass`, `star_radius`, `star_teff`) tal como está en el CSV.
+
+| Medida | Valor |
+|---|---|
+| Filas agrupables por `hostname` (`n_by_hostname`) | 521 (422 `hostname` distintos) |
+| Filas al respaldo por tupla (`n_by_tuple`) | 102 |
+| `hostname` con más de una tupla (`hostname_collisions`) | 1 |
+| Tuplas con más de un `hostname` (`tuple_collisions`) | 4 |
+| Tuplas del respaldo que también aparecen en filas con `hostname` | 11 tuplas, 13 filas de respaldo |
+
+- `hostname` con más de una tupla: **Kepler-20** — filas 293–297 (0.912, 0.944, 5466) y fila 338, Kepler-20 g (0.98, 0.97, 5314).
+- Tuplas con más de un `hostname`:
+  - (0.65, 0.59, 4500): 309 Kepler-1388 b / 310 Kepler-26 c
+  - (0.71, 0.65, 4450): 265 K2-121 b / 266–267 Kepler-114 c, d
+  - (0.83, 0.73, 5145): 406 Kepler-1254 d / 407 Kepler-57 c
+  - (0.93, 0.98, 5942): 287 Kepler-529 d / 288 Kepler-177 c
+
+  En los cuatro casos las filas son contiguas en el CSV, lo que es compatible con que pertenezcan al mismo sistema y una de las parejas de T1 sea incorrecta (la fila 265 es frágil). No se corrigió: es una observación, no una decisión.
+- Las 13 filas de respaldo que comparten tupla con filas que sí tienen `hostname` recibirían un `group_id` `tuple:` distinto del `hostname` de su posible sistema.
+
+### Filas frágiles
+
+Las filas `unique` que cambian de `pl_name` en alguna variante de la sensibilidad de T1 conservan su pareja y su `hostname` (decisión de Mai) y se marcan aquí como frágiles. Son **12 filas distintas**: la tabla de T1 lista 14 apariciones, pero 50 y 265 aparecen en dos variantes.
+
+| row_id | `pl_name` | `hostname` | `pl_bmassprov` | `planet_type` |
+|---|---|---|---|---|
+| 50 | Kepler-677 b | Kepler-677 | M-R relationship | gas_giant |
+| 74 | Kepler-1772 b | Kepler-1772 | M-R relationship | gas_giant |
+| 122 | Kepler-501 c | Kepler-501 | M-R relationship | gas_giant |
+| 183 | K2-215 b | K2-215 | M-R relationship | gas_giant |
+| 265 | K2-121 b | K2-121 | Mass | terrestrial |
+| 308 | Kepler-25 c | Kepler-25 | Mass | gas_giant |
+| 344 | Kepler-350 c | Kepler-350 | Mass | gas_giant |
+| 398 | Kepler-51 c | Kepler-51 | Mass | gas_giant |
+| 439 | Kepler-85 b | Kepler-85 | Mass | terrestrial |
+| 524 | HD 212301 b | HD 212301 | Msini | gas_giant |
+| 545 | Kepler-1061 b | Kepler-1061 | M-R relationship | gas_giant |
+| 612 | WASP-188 b | WASP-188 | Mass | gas_giant |
+
+El contrato de `lineage.csv` no tiene una columna para esto, así que la marca vive solo en este documento.
+
+### Uso
+
+`hostname` y `pl_bmassprov` son metadatos de auditoría y agrupamiento; no son variables del modelo (brief, "NO incluye").

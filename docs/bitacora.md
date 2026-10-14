@@ -30,3 +30,9 @@ Aprobados los 4 puntos: CSV a data/raw/ con SHA-256, consulta T3 al NASA Exoplan
   - Filas sin pl_name (102) y ambiguas: se agrupan por tupla estelar (criterio 13); se reporta el conteo.
   - Empates: se acepta la regla sin desempate manual; las 14 filas sensibles a la tolerancia se marcan como frágiles.
 - 2026-10-02 — Aviso de presupuesto al 50 % (6 h de 12). Faltan T4, T4b, T5, T8 (estimado 5-6 h). Se mantiene el presupuesto; revisión si se superan 9 h al cerrar T5.
+- 2026-10-13 — Decisiones de Mai sobre T3:
+  - pl_bmassprov solo vale en filas cuya masa coincide (±1 %) con pl_bmassj de la descarga del Proyecto 1 (2026-09-18, SHA-256 e5570cba…); en las demás la procedencia es "no verificable". No se autoriza una consulta nueva.
+  - Se agrega T3b [AGENTE]: probar si las masas del CSV caen exactamente sobre la relación masa-radio del catálogo (evidencia directa de masa derivada), para todas las filas. Pendiente de definirla en el plan.
+  - Criterio 13 cambia (regla 6): group_id = componente conexa de filas que comparten hostname O tupla estelar; ningún sistema puede quedar partido entre particiones. Pendiente de pasarlo al brief y al plan.
+  - Filas frágiles: 12 (no 14); documentadas en decisiones.md, sin cambiar el contrato de lineage.csv.
+  - Se acepta y registra la petición vacía extra a TAP/sync reportada por el agente; no se repite.

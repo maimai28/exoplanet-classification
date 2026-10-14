@@ -24,3 +24,9 @@ Aprobados los 4 puntos: CSV a data/raw/ con SHA-256, consulta T3 al NASA Exoplan
 - Mai aprueba brief y plan con el diff presentado, incluidos los tres puntos que propuso el Arquitecto: 6 decimales fijos; esquemas de metrics_by_mass_provenance.json y grouping_report.json; tarea T4b (criterio 12) antes de T5.
 - Siguiente: T1 (Especialista, linaje).
 - 2026-10-02 — T0 cerrada. Horas de Mai acumuladas: 6h
+- 2026-10-02 — Decisiones de Mai sobre T1:
+  - Fuente exacta: desconocida; consistente con versión anterior de NASA pscomppars (posiblemente vía Kaggle). No se busca el archivo de Kaggle.
+  - Regla radio >= 2 R⊕: reproduce las 623 etiquetas; se decide en T4b y se reporta como hipótesis sostenida.
+  - Filas sin pl_name (102) y ambiguas: se agrupan por tupla estelar (criterio 13); se reporta el conteo.
+  - Empates: se acepta la regla sin desempate manual; las 14 filas sensibles a la tolerancia se marcan como frágiles.
+- 2026-10-02 — Aviso de presupuesto al 50 % (6 h de 12). Faltan T4, T4b, T5, T8 (estimado 5-6 h). Se mantiene el presupuesto; revisión si se superan 9 h al cerrar T5.

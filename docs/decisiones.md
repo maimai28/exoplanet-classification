@@ -253,3 +253,159 @@ El contrato de `lineage.csv` no tiene una columna para esto, así que la marca v
 ### Uso
 
 `hostname` y `pl_bmassprov` son metadatos de auditoría y agrupamiento; no son variables del modelo (brief, "NO incluye").
+
+## T3b — Masa del CSV frente a la relación masa-radio del Archive (Especialista, 2026-10-13)
+
+Ajustes de Mai al prompt (2026-10-13), antes de empezar: manda el contrato de `docs/plan.md` (columnas, `mr_rel_residual`, y "no establecida" solo en este documento); las filas `Msini` entran a la prueba como cualquier otra; los controles son los del plan, y el positivo se estratifica por `mass_matches_p1`; las 17 filas RV van como subconjunto informativo; el `exoplanets.csv` del Proyecto 1 es entrada de solo lectura. No hubo consultas TAP, descargas de tablas ni dependencias nuevas.
+
+### Entradas (solo lectura, SHA-256 verificado por el script)
+
+| Archivo | SHA-256 |
+|---|---|
+| `data/raw/exoplanets_clean.csv` | `15f10a81606288d4dec71a8380fff47451cd9f8b5346add5b1c34e79bb966378` |
+| `data/raw/pscomppars_provenance_2026-10-13.csv` | `4d280c02823322a876d4321aec570643413d57bfc6c622c9b5b5ea9f714baacd` |
+| `~/proyectos/exoplanet-analysis/exoplanets.csv` (Proyecto 1) | `e5570cbaae8004213616c02ce9c30634a8b3d2c67c0e2acef90344b47fbe28e8` (coincide con T1) |
+| `data/processed/lineage.csv` | el de bc9592e |
+
+### Fuentes consultadas (todas con acceso el 2026-10-13)
+
+| Fuente | URL / DOI | Qué se tomó |
+|---|---|---|
+| NASA Exoplanet Archive, *How the Archive Calculates Values in the Planetary Systems Composite Parameters Table* ("Last updated: 10 June 2026") | https://exoplanetarchive.ipac.caltech.edu/docs/pscp_calc.html (SHA-256 del HTML leído: `b53385e75bb1196c03f233b84a7b3fd8e79d7f67cb05129f7e509ad9d8586c97`) | Forma, coeficientes y regímenes de la relación (secciones "Planet Radius" y "Planet Mass") |
+| La misma página en Wayback Machine | https://web.archive.org/web/20210923025628/https://exoplanetarchive.ipac.caltech.edu/docs/pscp_calc.html ("Last updated: 14 April 2021"); también las capturas 20230304190815, 20240523163444 ("2 May 2024") y 20260315143404 | Comprobar si la relación cambió: la sección "Planet Mass" es idéntica en las cinco versiones |
+| NASA Exoplanet Archive, *Planetary Systems and PSCompPars Table Definitions* ("Last updated: 4 June 2026") | https://exoplanetarchive.ipac.caltech.edu/docs/API_PS_columns.html | Definición de `pl_bmassprov`: "Options are: Mass, M\*sin(i)/sin(i), and M\*sini". **No menciona `M-R relationship`**, aunque T3 sí lo recibió de TAP; la documentación de la columna está desactualizada respecto a sus valores |
+| Chen, J. & Kipping, D. (2017), *Probabilistic Forecasting of the Masses and Radii of Other Worlds*, ApJ 834, 17 | DOI 10.3847/1538-4357/834/1/17; arXiv:1603.08614 (solo se leyó el resumen) | Es la relación que cita el Archive. Los coeficientes se tomaron del Archive, que dice tomarlos de "their Table 2 (or derived thereof)"; la tabla del artículo no se leyó directamente |
+| Mamajek et al. (2015), *IAU 2015 Resolution B3* | arXiv:1510.07674, DOI 10.48550/arXiv.1510.07674 (p. 3, tabla de constantes) | (GM)_J^N / (GM)_E^N = 1.2668653e17 / 3.986004e14 = 317.8284; R_eJ^N / R_eE^N = 7.1492e7 / 6.3781e6 = 11.208981, que es el mismo factor que T1 reconstruyó para el radio |
+
+### Relación: **establecida**
+
+El Archive invierte la relación de Chen & Kipping (2017) por tramos, con 𝓜 = log10(Mp/M⊕) y 𝓡 = log10(Rp/R⊕):
+
+𝓜 = (𝓡 − 𝓒) / 𝓢, con
+
+| Régimen (Rp en R⊕) | 𝓒 | 𝓢 |
+|---|---|---|
+| Rp < 1.23 | 0.00346 | 0.2790 |
+| 1.23 ≤ Rp < 11.1 | −0.0925 | 0.589 |
+| 11.1 ≤ Rp < 14.3 | — | — (el Archive "abstain[s] from calculating a planet mass": régimen degenerado por la pendiente negativa del tramo joviano) |
+| Rp ≥ 14.3 | −2.85 | 0.881 |
+
+- **Versión del catálogo a la que aplica:** la documentación es idéntica desde la captura del 2021-09-23 (página fechada el 14 de abril de 2021) hasta la versión del 10 de junio de 2026. La versión del catálogo de la que salió el CSV es desconocida (T1). Si es anterior a abril de 2021, la relación de ese momento no está documentada aquí.
+- **Frontera de 14.3:** el texto dice "≈ 11.1 ≤ Rp ≤ 14.3", y la tabla asigna Rp ≥ 14.3 al tramo estelar. Se usó la tabla. Ninguna fila tiene Rp exactamente igual a 14.3.
+- **Tramo Rp ≥ 14.3:** predice masas estelares (≈ 110 M_J para 14.6 R⊕), así que un gigante de ~1 M_J con ese radio nunca puede caer sobre la relación. Es lo que dice la documentación; se trata como un régimen comprobable.
+- **Coherencia interna:** el tramo terrestre en Mp = 2.04 M⊕ da 𝓡 = 0.0898 y el neptuniano da 0.0899, así que es continuo dentro del redondeo de los coeficientes.
+- **Validación de la implementación** con los valores de `pscomppars` del Proyecto 1 (2026-09-18), no con el CSV: las 30 filas con `pl_bmassprov` = `M-R relationship` dan `pl_bmassj`/predicción − 1 en [−0.0037, +0.0035]. Esa diferencia se explica por el redondeo de `pl_bmassj` a 3 cifras significativas (p. ej., 0.0101 ± 0.00005 es ±0.5 %). En todo el `exoplanets.csv` del Proyecto 1, 1886 de 6366 filas caen a menos de 1e-3. Es un dato informativo; no se usa para clasificar.
+- **Unidades:** Rp = `radius` × 11.208981; la masa predicha pasa a M_J dividiendo entre 317.8284.
+
+### Tolerancia ("exacto") por precisión numérica del CSV
+
+Se fija por fila, según cuántos decimales trae cada valor escrito en el CSV:
+
+- δm = ½·10^(−decimales de `mass`); δr = ½·10^(−decimales de `radius`).
+- La fila es `on_relation` si el intervalo [m − δm, m + δm] cruza el intervalo [f(Rp_lo)·(1 − ε), f(Rp_hi)·(1 + ε)], donde Rp_lo y Rp_hi = (r ∓ δr)·11.208981 y f es la relación (creciente dentro de cada régimen comprobable).
+- Si un extremo del intervalo de radio entra en la zona degenerada, se recorta al borde del lado comprobable.
+- ε = 1e-3 es un margen por convenciones de unidades (M_J/M⊕ y R_J/R⊕). La diferencia entre 317.83 y 317.8284 es de 5e-6, así que ε es holgado.
+
+Justificación: si la masa se calculó con la relación y luego se redondeó al escribirse, el único desacuerdo posible es el del redondeo de los dos valores impresos. Esta regla no tiene parámetros ajustables más allá de ε.
+
+Tolerancia relativa equivalente en masa, ≈ δm/m + (δr/r)/𝓢 + ε, sobre las 466 filas comprobables: mínimo 0.001, p25 0.0036, mediana 0.0088, p75 0.028, p90 0.064, máximo 0.93. Es amplia en las masas con una sola cifra significativa (p. ej., `0.01` → ±50 %).
+
+Nota de proceso: antes de fijar la regla se miró una exploración de residuos crudos con umbrales globales (ninguna fila a menos de 1e-3; 2 a menos de 1e-2), incluida la de las 30 filas `M-R relationship`. La regla no se ajustó después de eso: sale solo de los decimales impresos.
+
+### `not_testable`
+
+Solo por régimen, según el plan: 11.1 ≤ Rp < 14.3 R⊕ (valor puntual), **157 filas**. Ninguna fila carece de radio. Las `Msini` entran a la prueba (decisión de Mai).
+
+Hay 13 filas cuyo intervalo de redondeo del radio cruza 11.1 o 14.3: 2, 20, 64, 98, 127, 170, 174, 179, 282, 522, 543, 571 y 616. Se clasifican por su valor puntual. Las filas 179 y 282 (11.209 R⊕) quedan `not_testable`; las demás son comprobables y todas quedan `off_relation`.
+
+### Distribución de `mr_rel_residual` (466 filas comprobables)
+
+Cuantiles 0 / 5 / 25 / 50 / 75 / 95 / 100 %: −0.998 / −0.996 / −0.985 / −0.106 / 1.86 / 52.8 / 1059.3.
+
+| \|`mr_rel_residual`\| | ≤ 1e-3 | (1e-3, 1e-2] | (1e-2, 0.05] | (0.05, 0.1] | (0.1, 0.5] | (0.5, 1] | (1, 10] | > 10 |
+|---|---|---|---|---|---|---|---|---|
+| Filas | 0 | 2 | 7 | 9 | 79 | 226 | 91 | 52 |
+
+Los residuos cercanos a −1 vienen sobre todo del tramo Rp ≥ 14.3 (predicción estelar contra masa planetaria).
+
+### Controles
+
+**Positivo: las 30 filas `M-R relationship`.** 8 son `not_testable`; de las 22 comprobables, 3 quedan `on_relation` (14 %).
+
+| `mass_matches_p1` | Filas | Comprobables | `on_relation` | Tasa |
+|---|---|---|---|---|
+| `true` | 1 (fila 460, K2-133 c) | 1 | 1 | 1/1 |
+| `false` | 29 | 21 | 2 (filas 284 y 384) | 2/21 |
+
+- **Hallazgo:** el control positivo falla en las filas que no coinciden con el Proyecto 1. En el catálogo de hoy esas 30 masas sí caen sobre la relación (validación de arriba), pero en el CSV la masa es otra. Por ejemplo, K2-95 b: CSV 1.67 M_J y catálogo 0.0345 M_J; Kepler-1254 d: 18.86 M_J y 0.00714 M_J. Es compatible con que, en la versión que originó el CSV, esas masas no vinieran de la relación, o vinieran de otro radio. Esto refuerza la decisión de T3 de que `pl_bmassprov` solo vale donde la masa coincide.
+- El único positivo que coincide (fila 460) pasa con una masa impresa como `0.01`, que tiene una tolerancia de ±50 %; su residuo es +0.138. Su paso es poco informativo.
+
+**Negativo: las 234 filas `Mass` que coinciden con el Proyecto 1.** 70 son `not_testable`; de las 164 comprobables, las **164 quedan `off_relation` (100 %)**, con un \|residuo\| mínimo de 0.0136. Por régimen: terrestre 3/3, neptuniano 84/84, estelar 77/77 (estos últimos son triviales por lo dicho del tramo Rp ≥ 14.3). La parte informativa del control son las 87 filas con Rp < 11.1.
+
+**Subconjunto informativo, fuera de los controles: las 17 filas `unique` con `discoverymethod` = Radial Velocity (Proyecto 1).** Ninguna queda `on_relation`.
+- `off_relation`: 9 (filas 4, 55, 56, 165, 169, 174, 180, 338 y 524).
+- `not_testable`: 8 (filas 166, 167, 168, 171, 173, 175, 177 y 622).
+- `mass_provenance`: `measured` 4 (filas 55, 56, 167 y 177) y `unverifiable` 13.
+
+### Resultado (623 filas)
+
+| `mr_status` | Filas |
+|---|---|
+| `on_relation` | 10 |
+| `off_relation` | 456 |
+| `not_testable` | 157 |
+
+| `mass_provenance` | gas_giant | terrestrial | Total |
+|---|---|---|---|
+| `derived` | 4 | 6 | **10** |
+| `measured` | 219 | 17 | **236** |
+| `unverifiable` | 314 | 63 | **377** |
+| **Total** | 537 | 86 | **623** |
+
+- `derived` = las 10 `on_relation`. La única fila que coincide y tiene `M-R relationship` (460) también está `on_relation`.
+- `measured` = las 234 `Mass` y las 2 `Msini` que coinciden con el Proyecto 1 (ninguna `on_relation`). Incluye 72 filas `not_testable`.
+- `unverifiable` = 276 filas con `pl_name` cuya masa no coincide y 101 sin `pl_name`, todas sin `on_relation` (de las 284 que no coinciden, 8 quedan `on_relation` y van a `derived`; de las 102 sin `pl_name`, 1).
+
+Cruce por procedencia:
+
+| `pl_bmassprov` / `mass_matches_p1` | `on_relation` | `off_relation` | `not_testable` |
+|---|---|---|---|
+| sin `pl_name` | 1 | 77 | 24 |
+| `M-R relationship` / false | 2 | 19 | 8 |
+| `M-R relationship` / true | 1 | 0 | 0 |
+| `Mass` / false | 6 | 193 | 51 |
+| `Mass` / true | 0 | 164 | 70 |
+| `Msini` / false | 0 | 3 | 2 |
+| `Msini` / true | 0 | 0 | 2 |
+
+### Diagnóstico de tolerancia: filas `Mass` que quedan `on_relation`
+
+- `mass_matches_p1` = `true`: **0**.
+- `mass_matches_p1` = `false`: **6**, con estos `row_id`:
+
+| row_id | `pl_name` | `mass` | `radius` | residuo | Tolerancia por masa / por radio |
+|---|---|---|---|---|---|
+| 53 | GJ 1132 b | 0.0051 | 0.103 | −0.0035 | 0.010 / 0.017 |
+| 190 | K2-18 b | 0.025 | 0.2 | +0.406 | 0.020 / 0.424 |
+| 202 | K2-32 c | 0.04 | 0.31 | +0.069 | 0.125 / 0.027 |
+| 247 | Kepler-102 f | 0.002 | 0.079 | +0.011 | 0.250 / 0.023 |
+| 424 | Kepler-68 b | 0.0188 | 0.206 | +0.0052 | 0.003 / 0.004 |
+| 481 | TRAPPIST-1 e | 0.002 | 0.0819 | −0.111 | 0.250 / 0.002 |
+
+Las otras 4 filas `on_relation` son la 339 (sin `pl_name`; `0.1` M_J, ±50 %) y las `M-R relationship` 284, 384 y 460.
+
+En 7 de las 10 filas `on_relation` (190, 202, 247, 339, 384, 460 y 481), la tolerancia que se deriva de la precisión supera el 10 %. Solo 53, 424 y, en menor grado, 284 (±8 %) caen sobre la relación con precisión fina.
+
+### Para Mai (sin decidir fuga; eso es T4)
+
+1. `derived` = 10 descansa sobre todo en masas impresas con 1–2 cifras significativas. Con la regla de combinación aprobada ("`on_relation` manda"), filas como K2-18 b o TRAPPIST-1 e, cuyas masas en la literatura vienen de RV o TTV, quedan `derived` por la tolerancia de redondeo. La tolerancia no se cambió después de ver esto. Si quieres una regla distinta (p. ej., `not_testable` cuando la tolerancia supere un umbral), es un cambio de criterio que pasa por la regla 6.
+2. En el régimen terrestre, la relación de Chen & Kipping es un ajuste a planetas reales, así que una masa medida puede caer sobre ella por coincidencia. GJ 1132 b (−0.35 %) y Kepler-68 b (+0.5 %) son los casos finos.
+3. El control positivo solo es fuerte en el catálogo actual (30/30 en el Proyecto 1). Sobre los valores del CSV pasa en 3 de 22; lo interpreto como deriva de versión, no como falla de la implementación.
+
+### Reproducir
+
+```bash
+uv run python src/t3b_mass_provenance.py [ruta al exoplanets.csv del Proyecto 1]
+```
+
+Sin argumento usa `~/proyectos/exoplanet-analysis/exoplanets.csv`. El script verifica los tres SHA-256 y escribe `data/processed/mass_provenance.csv` con las columnas del contrato (623 filas, ordenadas por `row_id`).

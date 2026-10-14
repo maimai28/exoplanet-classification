@@ -153,3 +153,9 @@ Las filas 137/575 se disputan HATS-25 b, y 102/577 se disputan WASP-62 b; por es
 - La discrepancia de S1 (Kaggle vs. `pscomppars`) se resuelve en parte: los datos son del archivo de la NASA, pero no de la descarga del Proyecto 1. "Kaggle" es compatible con esto y no se ha verificado.
 - El `exoplanets.csv` del Proyecto 1 no está versionado; el linaje se fija con el SHA-256 de arriba.
 - Hay 102 filas (`none` + `ambiguous`) sin `pl_name`. T3 solo puede traer `hostname` para las 521 `unique`, así que las demás usarán el respaldo `tuple:` del criterio 13.
+
+## T2 — CSV a `data/raw/` (Implementador, 2026-10-13)
+
+- `git mv exoplanets_clean.csv data/raw/exoplanets_clean.csv`. El blob no cambia: `c6671ce61c7c339a91699ead01c17f911a04afe1`, igual al de b316a47.
+- `data/raw/SHA256SUMS` usa el formato de `sha256sum` con la ruta relativa a `data/raw/`, así que se comprueba con `cd data/raw && sha256sum -c SHA256SUMS`. Valor: `15f10a81606288d4dec71a8380fff47451cd9f8b5346add5b1c34e79bb966378`, igual a `git show b316a47:exoplanets_clean.csv | sha256sum` y al que registró T1.
+- El notebook sigue leyendo `exoplanets_clean.csv` desde la raíz, así que **no corre entre T2 y T7**. No se tocó: cambiar la ruta de lectura es parte de T7.

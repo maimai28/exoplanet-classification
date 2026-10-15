@@ -37,6 +37,9 @@ REGIMES = [(0.0, 0.00346, 0.2790), (1.23, -0.0925, 0.589), (14.3, -2.85, 0.881)]
 DEGENERATE = (11.1, 14.3)
 # Relative margin for unit conventions (M_J/M_E, R_J/R_E) on top of rounding.
 UNIT_MARGIN = 1e-3
+# Criterion 4 (d2a938e): an on_relation row whose per-row relative mass
+# tolerance exceeds this becomes not_testable / low_precision.
+LOW_PRECISION_TOL = 0.10
 P1_RTOL = 0.01  # criterion 4: mass matches P1 pl_bmassj within +/-1 %
 
 
@@ -48,11 +51,16 @@ def testable(re_):
     return not (DEGENERATE[0] <= re_ < DEGENERATE[1])
 
 
+def regime(re_):
+    """(lower bound, C, S) of the testable regime containing re_."""
+    return [r for r in REGIMES if re_ >= r[0]][-1]
+
+
 def mr_mass_mj(re_):
     """Archive mass (M_J) for radius re_ (R_earth); None in the degenerate gap."""
     if not testable(re_):
         return None
-    _, c, s = [r for r in REGIMES if re_ >= r[0]][-1]
+    _, c, s = regime(re_)
     return 10 ** ((math.log10(re_) - c) / s) / M_JUP_IN_M_EARTH
 
 
@@ -68,6 +76,13 @@ def clip_testable(re_, side_of):
     if testable(re_):
         return re_
     return math.nextafter(lo, 0) if side_of < lo else hi
+
+
+def rel_tolerance(mass_s, radius_s):
+    """Relative mass tolerance of the rounding test: dm/m + (dr/r)/S + margin."""
+    m, r = float(mass_s), float(radius_s)
+    s = regime(r * R_JUP_IN_R_EARTH)[2]
+    return half_ulp(mass_s) / m + half_ulp(radius_s) / r / s + UNIT_MARGIN
 
 
 def on_relation(mass_s, radius_s):
@@ -112,10 +127,16 @@ def main():
             match = str(abs(mass - x.pl_bmassj) <= P1_RTOL * x.pl_bmassj).lower()
         re_ = float(x.radius) * R_JUP_IN_R_EARTH
         pred = mr_mass_mj(re_)
+        reason = ""
         if pred is None:
-            status, pred_s, resid_s = "not_testable", "", ""
+            status, reason, pred_s, resid_s = "not_testable", "gap_11.1_14.3", "", ""
         else:
             status = "on_relation" if on_relation(x.mass, x.radius) else "off_relation"
+            if (
+                status == "on_relation"
+                and rel_tolerance(x.mass, x.radius) > LOW_PRECISION_TOL
+            ):
+                status, reason = "not_testable", "low_precision"
             pred_s, resid_s = f"{pred:.6f}", f"{(mass - pred) / pred:.6f}"
         bprov = x.pl_bmassprov if isinstance(x.pl_bmassprov, str) else ""
         if status == "on_relation" or (match == "true" and bprov == "M-R relationship"):
@@ -124,7 +145,7 @@ def main():
             cls = "measured"
         else:
             cls = "unverifiable"
-        rows.append((x.row_id, bprov, match, pred_s, resid_s, status, cls))
+        rows.append((x.row_id, bprov, match, pred_s, resid_s, status, reason, cls))
 
     out = pd.DataFrame(
         rows,
@@ -135,11 +156,13 @@ def main():
             "mr_predicted_mass",
             "mr_rel_residual",
             "mr_status",
+            "not_testable_reason",
             "mass_provenance",
         ],
     ).sort_values("row_id")
     out.to_csv(OUT, index=False, lineterminator="\n")
     print(out.mr_status.value_counts().to_string())
+    print(out.not_testable_reason.value_counts().to_string())
     print(out.mass_provenance.value_counts().to_string())
 
 

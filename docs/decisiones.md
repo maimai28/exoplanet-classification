@@ -409,3 +409,78 @@ uv run python src/t3b_mass_provenance.py [ruta al exoplanets.csv del Proyecto 1]
 ```
 
 Sin argumento usa `~/proyectos/exoplanet-analysis/exoplanets.csv`. El script verifica los tres SHA-256 y escribe `data/processed/mass_provenance.csv` con las columnas del contrato (623 filas, ordenadas por `row_id`).
+
+### T3b — intento 2 (Especialista, 2026-10-15)
+
+Re-ejecución con el criterio 4 modificado en d2a938e (regla 6, decisión de Mai del 2026-10-13). No hubo consultas TAP, descargas, dependencias nuevas ni escrituras en `data/raw/` o `tests/`. Las entradas, la relación, la tolerancia por fila, ε, los controles y la regla de combinación son los del intento 1 (43a9b14).
+
+**Cambio de criterio.**
+- Una fila que con la tolerancia de T3b daría `on_relation` y cuya tolerancia relativa por fila, δm/m + (δr/r)/𝓢 + ε, supera **0.10 (±10 % en masa)** queda `mr_status` = `not_testable` con `not_testable_reason` = `low_precision`. 𝓢 es la pendiente del régimen del radio puntual. En esas filas se conservan `mr_predicted_mass` y `mr_rel_residual` como diagnóstico.
+- Las filas `off_relation` no cambian, sea cual sea su tolerancia.
+- Las 157 filas de 11.1 ≤ Rp < 14.3 R⊕ llevan ahora `not_testable_reason` = `gap_11.1_14.3`, y en ellas `mr_predicted_mass` y `mr_rel_residual` siguen vacíos. Si una fila cumpliera las dos condiciones, manda `gap_11.1_14.3`; ninguna las cumple porque las del tramo no tienen predicción.
+- Columna nueva en `mass_provenance.csv`: `not_testable_reason`, entre `mr_status` y `mass_provenance`.
+- **El umbral de 0.10 se fijó después de ver los resultados del intento 1** (sección "Diagnóstico de tolerancia" de arriba). No es un umbral elegido a ciegas.
+
+**Justificación.** Una tolerancia amplia debilita una coincidencia, no una discrepancia. Si una masa impresa con una sola cifra significativa (p. ej., `0.01`, ±50 %) cae dentro de la banda, eso no distingue una masa derivada de una medida. En cambio, si la masa queda fuera incluso de esa banda tan amplia, la discrepancia es aún más clara. Por eso el umbral solo se aplica a las filas que darían `on_relation`.
+
+**Filas que cambiaron (7; todas eran `on_relation` en el intento 1):**
+
+| row_id | `pl_name` | `mass` | `radius` | `pl_bmassprov` / `mass_matches_p1` | Tolerancia | `mr_rel_residual` | `mass_provenance` |
+|---|---|---|---|---|---|---|---|
+| 190 | K2-18 b | 0.025 | 0.2 | `Mass` / false | 0.445 | +0.406 | `derived` → `unverifiable` |
+| 202 | K2-32 c | 0.04 | 0.31 | `Mass` / false | 0.153 | +0.069 | `derived` → `unverifiable` |
+| 247 | Kepler-102 f | 0.002 | 0.079 | `Mass` / false | 0.274 | +0.011 | `derived` → `unverifiable` |
+| 339 | (sin `pl_name`) | 0.1 | 0.483 | — | 0.503 | +0.258 | `derived` → `unverifiable` |
+| 384 | Kepler-446 d | 0.01 | 0.12 | `M-R relationship` / false | 0.572 | +0.338 | `derived` → `unverifiable` |
+| 460 | K2-133 c | 0.01 | 0.132 | `M-R relationship` / true | 0.507 | +0.138 | `derived` → `derived` (por la segunda rama de la regla: coincide y `M-R relationship`) |
+| 481 | TRAPPIST-1 e | 0.002 | 0.0819 | `Mass` / false | 0.253 | −0.111 | `derived` → `unverifiable` |
+
+Las otras 616 filas son idénticas al intento 1 en todas las columnas que ya existían.
+
+**Filas que siguen `on_relation` (3):**
+
+| row_id | `pl_name` | `pl_bmassprov` / `mass_matches_p1` | Tolerancia | `mr_rel_residual` |
+|---|---|---|---|---|
+| 53 | GJ 1132 b | `Mass` / false | 0.028 | −0.0035 |
+| 284 | Kepler-167 d | `M-R relationship` / false | 0.086 | +0.040 |
+| 424 | Kepler-68 b | `Mass` / false | 0.0078 | +0.0052 |
+
+**Posibles falsos `derived`, para T4:** GJ 1132 b (fila 53) y Kepler-68 b (fila 424). Ambas tienen `pl_bmassprov` = `Mass` en el catálogo de hoy, aunque su masa no coincide con la del Proyecto 1, y caen sobre la relación con precisión fina en el régimen terrestre. Ahí la relación de Chen & Kipping es un ajuste a planetas reales, así que una masa medida puede caer sobre ella por coincidencia. Siguen `derived` por la regla de combinación ("`on_relation` manda"); no se cambia nada aquí.
+
+**Controles (criterio de listo 4), después del cambio:**
+- Positivo, las 30 `M-R relationship`: `mass_matches_p1` = true → 0 comprobables (la fila 460 pasa a `low_precision`); false → 1 `on_relation` (284), 19 `off_relation`, 1 `low_precision` (384) y 8 `gap`. El control positivo sobre los valores del CSV queda en 1 de 20 filas comprobables sin `low_precision`.
+- Negativo, las 234 `Mass` que coinciden: sin cambios, 164/164 `off_relation` y 70 `gap`.
+- Diagnóstico, filas `Mass` que quedan `on_relation`: `mass_matches_p1` = true → **0**; false → **2** (filas 53 y 424).
+- Subconjunto RV (17 filas): sin cambios.
+
+**Resultado (623 filas), antes → después:**
+
+| `mr_status` | Intento 1 | Intento 2 |
+|---|---|---|
+| `on_relation` | 10 | **3** |
+| `off_relation` | 456 | **456** |
+| `not_testable` | 157 | **164** (157 `gap_11.1_14.3` + 7 `low_precision`) |
+| Total | 623 | 623 |
+
+| `mass_provenance` | Intento 1 | Intento 2 | gas_giant | terrestrial |
+|---|---|---|---|---|
+| `derived` | 10 | **4** (53, 284, 424, 460) | 1 | 3 |
+| `measured` | 236 | **236** | 219 | 17 |
+| `unverifiable` | 377 | **383** | 317 | 66 |
+| Total | 623 | **623** | 537 | 86 |
+
+Cruce por procedencia:
+
+| `pl_bmassprov` / `mass_matches_p1` | `on_relation` | `off_relation` | `not_testable` / `gap_11.1_14.3` | `not_testable` / `low_precision` |
+|---|---|---|---|---|
+| sin `pl_name` | 0 | 77 | 24 | 1 |
+| `M-R relationship` / false | 1 | 19 | 8 | 1 |
+| `M-R relationship` / true | 0 | 0 | 0 | 1 |
+| `Mass` / false | 2 | 193 | 51 | 4 |
+| `Mass` / true | 0 | 164 | 70 | 0 |
+| `Msini` / false | 0 | 3 | 2 | 0 |
+| `Msini` / true | 0 | 0 | 2 | 0 |
+
+Los conteos coinciden fila por fila con el efecto esperado por el Arquitecto.
+
+**Determinismo.** Dos ejecuciones seguidas de `uv run python src/t3b_mass_provenance.py` dan un `mass_provenance.csv` idéntico byte a byte (`cmp` sin diferencias), con SHA-256 `5fa605237b26bcac446d78e9c869bb936e194ad53e8341d0f490969881229992`.

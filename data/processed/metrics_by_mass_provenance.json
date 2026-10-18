@@ -1,0 +1,377 @@
+{
+  "derived": {
+    "metrics": {
+      "Baseline (prior)": {
+        "accuracy": {
+          "mean": 0.250000,
+          "std": 0.000000
+        },
+        "average_precision_small": {
+          "mean": 0.733333,
+          "std": 0.110414
+        },
+        "balanced_accuracy": {
+          "mean": 0.500000,
+          "std": 0.000000
+        },
+        "f1_small": {
+          "mean": 0.000000,
+          "std": 0.000000
+        },
+        "precision_small": {
+          "mean": 0.000000,
+          "std": 0.000000
+        },
+        "recall_small": {
+          "mean": 0.000000,
+          "std": 0.000000
+        },
+        "roc_auc": {
+          "mean": 0.400000,
+          "std": 0.278887
+        }
+      },
+      "Logistic Regression": {
+        "accuracy": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "average_precision_small": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "balanced_accuracy": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "f1_small": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "precision_small": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "recall_small": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "roc_auc": {
+          "mean": 1.000000,
+          "std": 0.000000
+        }
+      },
+      "Random Forest": {
+        "accuracy": {
+          "mean": 0.500000,
+          "std": 0.000000
+        },
+        "average_precision_small": {
+          "mean": 0.983333,
+          "std": 0.037268
+        },
+        "balanced_accuracy": {
+          "mean": 0.666667,
+          "std": 0.000000
+        },
+        "f1_small": {
+          "mean": 0.500000,
+          "std": 0.000000
+        },
+        "precision_small": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "recall_small": {
+          "mean": 0.333333,
+          "std": 0.000000
+        },
+        "roc_auc": {
+          "mean": 0.933333,
+          "std": 0.149071
+        }
+      },
+      "SVM (RBF)": {
+        "accuracy": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "average_precision_small": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "balanced_accuracy": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "f1_small": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "precision_small": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "recall_small": {
+          "mean": 1.000000,
+          "std": 0.000000
+        },
+        "roc_auc": {
+          "mean": 1.000000,
+          "std": 0.000000
+        }
+      }
+    },
+    "n": 4
+  },
+  "measured": {
+    "metrics": {
+      "Baseline (prior)": {
+        "accuracy": {
+          "mean": 0.927966,
+          "std": 0.000000
+        },
+        "average_precision_small": {
+          "mean": 0.072292,
+          "std": 0.007104
+        },
+        "balanced_accuracy": {
+          "mean": 0.500000,
+          "std": 0.000000
+        },
+        "f1_small": {
+          "mean": 0.000000,
+          "std": 0.000000
+        },
+        "precision_small": {
+          "mean": 0.000000,
+          "std": 0.000000
+        },
+        "recall_small": {
+          "mean": 0.000000,
+          "std": 0.000000
+        },
+        "roc_auc": {
+          "mean": 0.491270,
+          "std": 0.052033
+        }
+      },
+      "Logistic Regression": {
+        "accuracy": {
+          "mean": 0.764407,
+          "std": 0.009755
+        },
+        "average_precision_small": {
+          "mean": 0.187923,
+          "std": 0.015231
+        },
+        "balanced_accuracy": {
+          "mean": 0.623476,
+          "std": 0.012500
+        },
+        "f1_small": {
+          "mean": 0.219162,
+          "std": 0.011649
+        },
+        "precision_small": {
+          "mean": 0.144028,
+          "std": 0.008220
+        },
+        "recall_small": {
+          "mean": 0.458824,
+          "std": 0.026307
+        },
+        "roc_auc": {
+          "mean": 0.677464,
+          "std": 0.007600
+        }
+      },
+      "Random Forest": {
+        "accuracy": {
+          "mean": 0.880508,
+          "std": 0.010968
+        },
+        "average_precision_small": {
+          "mean": 0.209002,
+          "std": 0.040982
+        },
+        "balanced_accuracy": {
+          "mean": 0.599221,
+          "std": 0.060910
+        },
+        "f1_small": {
+          "mean": 0.240114,
+          "std": 0.088683
+        },
+        "precision_small": {
+          "mean": 0.220092,
+          "std": 0.070373
+        },
+        "recall_small": {
+          "mean": 0.270588,
+          "std": 0.128876
+        },
+        "roc_auc": {
+          "mean": 0.736207,
+          "std": 0.028643
+        }
+      },
+      "SVM (RBF)": {
+        "accuracy": {
+          "mean": 0.833898,
+          "std": 0.008151
+        },
+        "average_precision_small": {
+          "mean": 0.131323,
+          "std": 0.012950
+        },
+        "balanced_accuracy": {
+          "mean": 0.584958,
+          "std": 0.004392
+        },
+        "f1_small": {
+          "mean": 0.203498,
+          "std": 0.007859
+        },
+        "precision_small": {
+          "mean": 0.155716,
+          "std": 0.009142
+        },
+        "recall_small": {
+          "mean": 0.294118,
+          "std": 0.000000
+        },
+        "roc_auc": {
+          "mean": 0.655385,
+          "std": 0.023150
+        }
+      }
+    },
+    "n": 236
+  },
+  "unverifiable": {
+    "metrics": {
+      "Baseline (prior)": {
+        "accuracy": {
+          "mean": 0.827676,
+          "std": 0.000000
+        },
+        "average_precision_small": {
+          "mean": 0.171060,
+          "std": 0.004774
+        },
+        "balanced_accuracy": {
+          "mean": 0.500000,
+          "std": 0.000000
+        },
+        "f1_small": {
+          "mean": 0.000000,
+          "std": 0.000000
+        },
+        "precision_small": {
+          "mean": 0.000000,
+          "std": 0.000000
+        },
+        "recall_small": {
+          "mean": 0.000000,
+          "std": 0.000000
+        },
+        "roc_auc": {
+          "mean": 0.495923,
+          "std": 0.016547
+        }
+      },
+      "Logistic Regression": {
+        "accuracy": {
+          "mean": 0.750914,
+          "std": 0.011016
+        },
+        "average_precision_small": {
+          "mean": 0.585189,
+          "std": 0.016958
+        },
+        "balanced_accuracy": {
+          "mean": 0.741554,
+          "std": 0.010825
+        },
+        "f1_small": {
+          "mean": 0.501697,
+          "std": 0.013912
+        },
+        "precision_small": {
+          "mean": 0.383060,
+          "std": 0.013645
+        },
+        "recall_small": {
+          "mean": 0.727273,
+          "std": 0.018557
+        },
+        "roc_auc": {
+          "mean": 0.810821,
+          "std": 0.003321
+        }
+      },
+      "Random Forest": {
+        "accuracy": {
+          "mean": 0.829765,
+          "std": 0.005954
+        },
+        "average_precision_small": {
+          "mean": 0.459195,
+          "std": 0.019676
+        },
+        "balanced_accuracy": {
+          "mean": 0.646425,
+          "std": 0.014375
+        },
+        "f1_small": {
+          "mean": 0.425549,
+          "std": 0.025422
+        },
+        "precision_small": {
+          "mean": 0.508842,
+          "std": 0.022741
+        },
+        "recall_small": {
+          "mean": 0.366667,
+          "std": 0.032848
+        },
+        "roc_auc": {
+          "mean": 0.791540,
+          "std": 0.015365
+        }
+      },
+      "SVM (RBF)": {
+        "accuracy": {
+          "mean": 0.819321,
+          "std": 0.005022
+        },
+        "average_precision_small": {
+          "mean": 0.503826,
+          "std": 0.023661
+        },
+        "balanced_accuracy": {
+          "mean": 0.737291,
+          "std": 0.010663
+        },
+        "f1_small": {
+          "mean": 0.538607,
+          "std": 0.014600
+        },
+        "precision_small": {
+          "mean": 0.480917,
+          "std": 0.011703
+        },
+        "recall_small": {
+          "mean": 0.612121,
+          "std": 0.020328
+        },
+        "roc_auc": {
+          "mean": 0.786464,
+          "std": 0.004164
+        }
+      }
+    },
+    "n": 383
+  }
+}

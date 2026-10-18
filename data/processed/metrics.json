@@ -1,0 +1,122 @@
+{
+  "Baseline (prior)": {
+    "accuracy": {
+      "mean": 0.861961,
+      "std": 0.002758
+    },
+    "average_precision_small": {
+      "mean": 0.138039,
+      "std": 0.002758
+    },
+    "balanced_accuracy": {
+      "mean": 0.500000,
+      "std": 0.000000
+    },
+    "f1_small": {
+      "mean": 0.000000,
+      "std": 0.000000
+    },
+    "precision_small": {
+      "mean": 0.000000,
+      "std": 0.000000
+    },
+    "recall_small": {
+      "mean": 0.000000,
+      "std": 0.000000
+    },
+    "roc_auc": {
+      "mean": 0.500000,
+      "std": 0.000000
+    }
+  },
+  "Logistic Regression": {
+    "accuracy": {
+      "mean": 0.757460,
+      "std": 0.034069
+    },
+    "average_precision_small": {
+      "mean": 0.515262,
+      "std": 0.154399
+    },
+    "balanced_accuracy": {
+      "mean": 0.726603,
+      "std": 0.067902
+    },
+    "f1_small": {
+      "mean": 0.434577,
+      "std": 0.064867
+    },
+    "precision_small": {
+      "mean": 0.322233,
+      "std": 0.044723
+    },
+    "recall_small": {
+      "mean": 0.684052,
+      "std": 0.160119
+    },
+    "roc_auc": {
+      "mean": 0.796999,
+      "std": 0.072898
+    }
+  },
+  "Random Forest": {
+    "accuracy": {
+      "mean": 0.846828,
+      "std": 0.027739
+    },
+    "average_precision_small": {
+      "mean": 0.433021,
+      "std": 0.106555
+    },
+    "balanced_accuracy": {
+      "mean": 0.637025,
+      "std": 0.062947
+    },
+    "f1_small": {
+      "mean": 0.379088,
+      "std": 0.122462
+    },
+    "precision_small": {
+      "mean": 0.435340,
+      "std": 0.145675
+    },
+    "recall_small": {
+      "mean": 0.347190,
+      "std": 0.127898
+    },
+    "roc_auc": {
+      "mean": 0.789132,
+      "std": 0.058762
+    }
+  },
+  "SVM (RBF)": {
+    "accuracy": {
+      "mean": 0.825963,
+      "std": 0.027698
+    },
+    "average_precision_small": {
+      "mean": 0.426369,
+      "std": 0.089854
+    },
+    "balanced_accuracy": {
+      "mean": 0.715457,
+      "std": 0.052290
+    },
+    "f1_small": {
+      "mean": 0.471137,
+      "std": 0.072959
+    },
+    "precision_small": {
+      "mean": 0.409659,
+      "std": 0.069275
+    },
+    "recall_small": {
+      "mean": 0.562876,
+      "std": 0.106252
+    },
+    "roc_auc": {
+      "mean": 0.769397,
+      "std": 0.060635
+    }
+  }
+}

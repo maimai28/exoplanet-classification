@@ -1,0 +1,52 @@
+{
+  "main": {
+    "Logistic Regression vs Baseline (prior)": {
+      "df": 24,
+      "mean_diff": 0.377224,
+      "metric": "average_precision_small",
+      "p_value": 0.000133,
+      "t": 4.541900,
+      "test_train_ratio": 0.250008
+    },
+    "Logistic Regression vs Random Forest": {
+      "df": 24,
+      "mean_diff": 0.082241,
+      "metric": "average_precision_small",
+      "p_value": 0.263822,
+      "t": 1.144207,
+      "test_train_ratio": 0.250008
+    },
+    "Logistic Regression vs SVM (RBF)": {
+      "df": 24,
+      "mean_diff": 0.088894,
+      "metric": "average_precision_small",
+      "p_value": 0.201358,
+      "t": 1.313728,
+      "test_train_ratio": 0.250008
+    },
+    "Random Forest vs Baseline (prior)": {
+      "df": 24,
+      "mean_diff": 0.294982,
+      "metric": "average_precision_small",
+      "p_value": 0.000030,
+      "t": 5.134401,
+      "test_train_ratio": 0.250008
+    },
+    "Random Forest vs SVM (RBF)": {
+      "df": 24,
+      "mean_diff": 0.006652,
+      "metric": "average_precision_small",
+      "p_value": 0.905695,
+      "t": 0.119728,
+      "test_train_ratio": 0.250008
+    },
+    "SVM (RBF) vs Baseline (prior)": {
+      "df": 24,
+      "mean_diff": 0.288330,
+      "metric": "average_precision_small",
+      "p_value": 0.000004,
+      "t": 5.923746,
+      "test_train_ratio": 0.250008
+    }
+  }
+}

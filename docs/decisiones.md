@@ -592,3 +592,26 @@ Decisiones de Mai al pasar T4, T4b y T5 al brief y al plan. Registradas por el A
 - **(a) T4:** `target` = `size_class`, no `planet_type`, en `data/processed/features.json`. El mapeo `terrestrial`→`small` y `gas_giant`→`large` se escribe en `data/processed/labels.csv` (`row_id`, `planet_type`, `size_class`). `data/raw/` no se toca.
 - **(b) T5:** sin CV interior. Los tres modelos usan exactamente los hiperparámetros del notebook en `main` (1f2e02f): `class_weight="balanced"` en los tres, `random_state=42`, `max_iter=1000` en LR, `n_estimators=300` en RF, y `C` y `gamma` por defecto en el SVC. No hay búsqueda de hiperparámetros (criterio 10). `class_weight="balanced"` no se agrega ni se quita: ya está en el notebook. La CV exterior, la métrica principal, la línea base, la comparación y la corrida de sensibilidad siguen como en T5.
 - **(c) Criterio 6:** precisión, *recall* y F1 de `small` se agregan como métricas secundarias, con el umbral por defecto de `predict()`: probabilidad 0.5 en LR, RF y la línea base, y `decision_function` > 0 en el SVM, que no calcula probabilidades.
+
+## T7 — Notebook adaptado a T4, T4b y T5 (Implementador, 2026-10-18)
+
+Rama `exp/2026-09-30-auditoria`, sobre `pruebas-1`. No se tocó `tests/`, `data/raw/` ni el resto de `docs/`.
+
+### Ejecución
+- Comando del contrato en la ThinkCentre (Debian 13, 12 hilos): **≈35 s de pared** por ejecución (34.9 s y 34.5 s medidos con `time`). Muy por debajo del límite de 30 min.
+- Dos ejecuciones seguidas: las 11 salidas de T7 son idénticas byte a byte (`cmp` sin diferencias). SHA-256 de `metrics.json`: `84fb4118ea58839f1705a5a74b33a7f4ebc074a78e3b8a7b4b00425ea9cfa474`; de `predictions.csv`: `f5a023a0aa747a99bc3c5910de71f5533c40dc03a618b04bb0d151e95d32992a`.
+- `uv run pytest -q`: 91 pasan. `uvx ruff check .`: limpio.
+
+### Dependencias
+- `scipy>=1.18.1` explícita (la versión ya fijada en `uv.lock`) y `pytest>=9.1.1` en el grupo `dev`. Entran al lock `pytest` 9.1.1, `pluggy` 1.7.0 e `iniconfig` 2.3.1; ninguna otra versión cambió.
+
+### Puntos que el contrato no fijaba
+- **Separabilidad (decisión de Mai, 2026-10-18):** para las seis columnas de `features.json` (incluida `radius`), en las 623 filas y sin ajustar nada: ROC-AUC del valor crudo como score de `small`, `max(AUC, 1 − AUC)` y el hueco entre los rangos de las clases (> 0: rangos disjuntos). Solo se imprime.
+- **Regla (k):** la celda que escribe `features.json` es la única con nombres de columna. También define `STAR_TUPLE`, la llave de agrupamiento del criterio 13, que nunca entra a X.
+- **Tupla estelar:** se compara como texto exacto del CSV (`dtype=str`), no como float, tal como dice el criterio 13.
+- `n_train` = filas de la corrida en esa repetición − `n_eval` (623 o 236).
+- Si `exploratory` fuera `false`, las llaves de `comparisons.json["sensitivity"]` serían `"<modelo>: with_mass vs without_mass"`. Hoy no se escriben porque `n_small` = 17 < 25.
+- El score de la línea base es la prevalencia de `small` en el entrenamiento de cada fold. Por eso, al juntar folds (`metrics_by_mass_provenance.json`), su ROC-AUC no es exactamente 0.5.
+- Las figuras existentes (distribución de clases, matrices de confusión, comparación de modelos) se rehicieron con las predicciones fuera de fold de `main`, repetición 0. No se agregaron figuras.
+- El notebook se guarda con las salidas de la ejecución del comando del contrato, como en `main`, sin los metadatos de tiempo por celda.
+- README (decisión de Mai, 2026-10-18): se quitó la prosa de `main` que ya no aplica (split 80/20, tabla y clases viejas, instalación con `pip`). Quedan los encabezados vacíos para T8/T9, la sección "Reproduce" con `uv sync --locked` y el comando del contrato, y la tabla entre los marcadores, copiada de la salida del notebook (`results_table`, sección 9).

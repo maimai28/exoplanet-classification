@@ -554,3 +554,33 @@ Un resultado cercano al baseline también se reporta como hallazgo.
 
 ### Consecuencias para T5
 - Hay desbalance de 86/537. El baseline de mayoría da 86.2 % de accuracy, así que la accuracy no puede ser la métrica principal.
+
+## T5 — Esquema de evaluación [TÚ]
+
+Fecha: 2026-10-18.
+
+### Partición
+- No hay holdout aparte: con 86 filas `small`, un 20 % dejaría unas 17 y la métrica sería ruido.
+- CV exterior: StratifiedGroupKFold, k = 5, 5 repeticiones con semillas fijas (0–4), es decir, 25 evaluaciones. Grupos: `group_id` del criterio 13.
+- CV interior (dentro de cada fold exterior): StratifiedGroupKFold, k = 3, solo para elegir hiperparámetros. La rejilla de cada modelo queda fijada en el plan antes de correr.
+- Todo el preprocesamiento (escalado, transformaciones) se ajusta solo con el entrenamiento de cada fold, dentro de un Pipeline.
+
+### Métricas
+- Principal: Average Precision (PR-AUC) con clase positiva `small`. El baseline es la prevalencia, 0.138.
+- Secundarias: balanced accuracy y ROC-AUC.
+- Accuracy: solo como contexto (baseline de mayoría = 0.862).
+- Se reporta media ± desviación estándar sobre las 25 evaluaciones exteriores.
+
+### Baseline y comparación
+- Baseline: DummyClassifier(strategy="prior"), evaluado con el mismo esquema.
+- Comparación entre modelos y contra el baseline: test t corregido por remuestreo (Nadeau & Bengio, 2003), pareado por fold. α = 0.05, sin ajuste por comparaciones múltiples; se reportan los p-valores tal cual.
+- Si ningún modelo supera al baseline con significancia, eso es el resultado y se reporta.
+
+### Corrida de sensibilidad con masa (T4)
+- Mismo esquema, restringido a las 236 filas measured.
+- Se compara contra el modelo principal reentrenado y evaluado sobre esas mismas 236 filas y los mismos folds.
+- Si el subconjunto tiene menos de 25 filas `small`, la corrida se reporta como exploratoria, sin test de significancia.
+
+### No se hace
+- No se elige "modelo final" (brief).
+- No se ajusta el umbral de decisión. Balanced accuracy usa class_weight="balanced" y el umbral de 0.5.

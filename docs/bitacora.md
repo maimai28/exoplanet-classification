@@ -64,3 +64,4 @@ Aprobados los 4 puntos: CSV a data/raw/ con SHA-256, consulta T3 al NASA Exoplan
 - 2026-10-18 · T4 [TÚ] · fuga: radius excluido, mass → sensibilidad (236 measured); modelo principal con 4 variables. Horas: 8 h acumuladas.
 - 2026-10-18 · T4b [TÚ] · pregunta fijada; clases renombradas small/large (umbral 2 R⊕), positiva = small. Horas: X h acumuladas.
 - 2026-10-18 · T5 [TÚ] · CV anidada 5×5 por grupos, AP de small como métrica principal, Nadeau-Bengio para comparar. Horas: X h acumuladas.
+- 2026-10-18 · T5 [TÚ] · CV anidada 5×5 por grupos, AP de small como métrica principal, Nadeau-Bengio para comparar. Horas: 9 h acumuladas.

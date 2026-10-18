@@ -584,3 +584,11 @@ Fecha: 2026-10-18.
 ### No se hace
 - No se elige "modelo final" (brief).
 - No se ajusta el umbral de decisión. Balanced accuracy usa class_weight="balanced" y el umbral de 0.5.
+
+## Enmiendas por regla 6 (2026-10-18)
+
+Decisiones de Mai al pasar T4, T4b y T5 al brief y al plan. Registradas por el Arquitecto con autorización de Mai. Las secciones de arriba no se modifican; donde haya conflicto, mandan estas enmiendas. Ver `docs/bitacora.md` (2026-10-18).
+
+- **(a) T4:** `target` = `size_class`, no `planet_type`, en `data/processed/features.json`. El mapeo `terrestrial`→`small` y `gas_giant`→`large` se escribe en `data/processed/labels.csv` (`row_id`, `planet_type`, `size_class`). `data/raw/` no se toca.
+- **(b) T5:** sin CV interior. Los tres modelos usan exactamente los hiperparámetros del notebook en `main` (1f2e02f): `class_weight="balanced"` en los tres, `random_state=42`, `max_iter=1000` en LR, `n_estimators=300` en RF, y `C` y `gamma` por defecto en el SVC. No hay búsqueda de hiperparámetros (criterio 10). `class_weight="balanced"` no se agrega ni se quita: ya está en el notebook. La CV exterior, la métrica principal, la línea base, la comparación y la corrida de sensibilidad siguen como en T5.
+- **(c) Criterio 6:** precisión, *recall* y F1 de `small` se agregan como métricas secundarias, con el umbral por defecto de `predict()`: probabilidad 0.5 en LR, RF y la línea base, y `decision_function` > 0 en el SVM, que no calcula probabilidades.

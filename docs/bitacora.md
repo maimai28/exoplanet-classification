@@ -65,3 +65,19 @@ Aprobados los 4 puntos: CSV a data/raw/ con SHA-256, consulta T3 al NASA Exoplan
 - 2026-10-18 · T4b [TÚ] · pregunta fijada; clases renombradas small/large (umbral 2 R⊕), positiva = small. Horas: X h acumuladas.
 - 2026-10-18 · T5 [TÚ] · CV anidada 5×5 por grupos, AP de small como métrica principal, Nadeau-Bengio para comparar. Horas: X h acumuladas.
 - 2026-10-18 · T5 [TÚ] · CV anidada 5×5 por grupos, AP de small como métrica principal, Nadeau-Bengio para comparar. Horas: 9 h acumuladas.
+
+## 2026-10-18 — Arquitecto/Planificador — regla 6: T4, T4b y T5 al brief y al plan
+- Contradicciones encontradas antes de editar y resueltas por Mai:
+  1. La CV interior de T5 chocaba con el criterio 10 y con "NO incluye" (búsqueda de hiperparámetros). Se quita: CV exterior 5×5 sin anidar, con los hiperparámetros exactos del notebook de `main`, `class_weight="balanced"` incluido. El criterio 10 no cambia y no hay rejillas.
+  2. El criterio 6 (P/R/F1 de `terrestrial`) chocaba con T4b/T5. Quedan siete métricas: `average_precision_small` (principal), `balanced_accuracy`, `roc_auc`, `precision_small`, `recall_small`, `f1_small` y `accuracy` (contexto). P/R/F1 usan el umbral de `predict()` (`decision_function` > 0 en el SVM).
+  3. T4 fijaba `target` = `planet_type`, y T4b, `size_class` con positiva `small`. Queda `target` = `size_class`.
+  4. El Implementador no escribe en `reports/`. Las métricas van en `data/processed/`; `reports/` queda para T6, T10 y T11.
+- Enmiendas registradas en `docs/decisiones.md` ("Enmiendas por regla 6 (2026-10-18)"), con autorización de Mai para agregar solo esa sección.
+- Brief: los criterios 1 (lista byte a byte), 4 (veredictos de T4, prueba de `radius` sobre `main`/`sensitivity_mass`/`excluded`, prueba de filas `measured`), 6 (reescrito) y 12 (decidido en T4b; prueba del mapeo de `labels.csv`); S5 y S7.
+- Plan: contrato nuevo (`labels.csv`, `features.json` de cuatro llaves, modelos, `folds.csv` con `repeat`, `folds_sensitivity.csv`, `predictions.csv`, `metrics_by_fold.csv`, `metrics.json` de 4 × 7, `metrics_sensitivity.json`, `comparisons.json`, método de `metrics_by_mass_provenance.json`, marcadores del README, `reports/`, formato determinista). T6 a T11 ajustadas; T10 incluye el ataque sobre `star_radius`.
+- Pendiente: aprobación de Mai del diff. T6 no empieza hasta entonces.
+
+## 2026-10-18 — Mai aprueba el diff de T4, T4b y T5 (regla 6)
+- Se aprueban los 14 puntos de decisión. Ajuste al punto 14: T7 declara `scipy` explícitamente en `pyproject.toml`; el brief (Restricciones) lo admite junto a `pytest`.
+- Se corrige la RAM de la ThinkCentre en el brief (Restricciones): 23 GB útiles, no 8 GB.
+- Siguiente: T6 (Tester, fase A).

@@ -528,3 +528,29 @@ Una variable es fuga si la etiqueta se puede calcular a partir de ella, o si ell
 
 ### Abierto para el red team (T10)
 - star_radius: ¿la métrica cae de forma anómala al quitarla? Eso indicaría que lleva información del radio planetario más allá de la física esperable.
+
+## T4b — Pregunta del modelo y nombres de clase [TÚ]
+
+Fecha: 2026-10-18.
+
+### Pregunta
+¿Qué tanto de la clase de tamaño de un planeta (R < 2 R⊕ frente a R ≥ 2 R⊕) se puede predecir solo con su periodo orbital y las propiedades de su estrella (masa, radio, temperatura efectiva)?
+
+Se espera señal física por tres vías:
+- Los planetas grandes de periodo corto (júpiteres calientes) son relativamente comunes en las muestras de tránsito.
+- Las estrellas de baja masa albergan más planetas pequeños.
+- El valle de radios depende del flujo recibido, que es función del periodo y de la estrella.
+
+Un resultado cercano al baseline también se reporta como hallazgo.
+
+### Nombres de clase
+- Las etiquetas originales `terrestrial` y `gas_giant` son incorrectas. La regla real (T1) es un umbral de radio, R ≥ 2 R⊕ (0.1784 R_J), así que `gas_giant` incluye sub-Neptunos y `terrestrial` incluye súper-Tierras de composición no medida.
+- Nombres nuevos, en la columna `size_class` de data/processed:
+  - `small`: R < 2 R⊕ (86 filas, 13.8 %)
+  - `large`: R ≥ 2 R⊕ (537 filas, 86.2 %)
+- data/raw no se modifica. El mapeo terrestrial→small y gas_giant→large se documenta y se prueba en T6.
+- Clase positiva: `small` (la minoritaria).
+- En el README, la interpretación física es "por debajo o por encima del valle de radios". No se habla de composición.
+
+### Consecuencias para T5
+- Hay desbalance de 86/537. El baseline de mayoría da 86.2 % de accuracy, así que la accuracy no puede ser la métrica principal.

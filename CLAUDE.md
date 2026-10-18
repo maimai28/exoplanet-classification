@@ -1,6 +1,6 @@
 # exoplanet-classification
 
-Proyecto: Clasificación de exoplanetas en terrestres vs gigantes gaseosos (scikit-learn, notebook).
+Proyecto: Clasificación de exoplanetas por tamaño, small vs large (umbral R = 2 R⊕), desde órbita y estrella (scikit-learn, notebook).
 Módulo por defecto: M2 (Datos)
 Dueño: Mai. Todas las decisiones P1, P2 y P3 son suyas.
 

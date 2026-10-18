@@ -484,3 +484,47 @@ Cruce por procedencia:
 Los conteos coinciden fila por fila con el efecto esperado por el Arquitecto.
 
 **Determinismo.** Dos ejecuciones seguidas de `uv run python src/t3b_mass_provenance.py` dan un `mass_provenance.csv` idéntico byte a byte (`cmp` sin diferencias), con SHA-256 `5fa605237b26bcac446d78e9c869bb936e194ad53e8341d0f490969881229992`.
+
+## T4 — Veredicto de fuga por variable [TÚ]
+
+Fecha: 2026-10-18. Insumos: criterio 4 del brief, mass_provenance.csv (T3b intento 2, commit 1617f94), hipótesis de etiqueta de T1 (radius ≥ 2 R⊕ reproduce 623/623).
+
+### Criterio
+Una variable es fuga si la etiqueta se puede calcular a partir de ella, o si ella se calcula a partir del radio planetario. Que una variable esté correlacionada físicamente con el radio no la hace fuga.
+
+### Tabla
+
+| Columna | Relación con la etiqueta | Veredicto | Justificación |
+|---|---|---|---|
+| planet_type | Es la etiqueta | objetivo | — |
+| radius | La etiqueta es un umbral sobre esta columna | excluir | Fuga por definición (T1: 623/623). |
+| mass | Mixta según la procedencia | sensibilidad | Ver la sección Masa. |
+| orbital_period | Ninguna | incluir | Se mide del tránsito o de la velocidad radial, sin usar R. |
+| star_mass | Ninguna | incluir | Propiedad estelar. |
+| star_teff | Ninguna | incluir | Propiedad estelar. |
+| star_radius | Indirecta: R = (Rp/R*)·R* | incluir | Por sí sola no fija R; Rp/R* no está en el CSV. Riesgo anotado para el red team. |
+
+### Masa
+- **derived (4): fuga directa.** Su masa se calculó a partir de R con Chen & Kipping (2017).
+- **unverifiable (383, 61 %): no se puede descartar fuga.** Vienen de una versión anterior del catálogo y su procedencia no se puede reconstruir.
+- **measured (236): sin fuga detectada.** GJ 1132 b y Kepler-68 b se anotan como posibles falsos derived.
+- **Veredicto: sensibilidad.**
+  - Modelo principal: sin masa, sobre las 623 filas.
+  - Corrida de sensibilidad: con masa, solo sobre las 236 measured, comparada contra el modelo principal evaluado en esas mismas 236 filas.
+- Si la masa mejora mucho la métrica, se reporta como dependencia de una variable físicamente ligada al radio por la relación M-R real.
+
+### Consecuencia para el modelo
+- El modelo principal usa 4 variables: orbital_period, star_mass, star_radius y star_teff.
+- La pregunta pasa a ser si la clase de tamaño del planeta se puede predecir desde su órbita y su estrella. Se formula en T4b.
+
+### Contrato para T5 a T7
+- La lista de variables queda fija en `data/processed/features.json`:
+  - `"main": ["orbital_period", "star_mass", "star_radius", "star_teff"]`
+  - `"sensitivity_mass": main + ["mass"]`, restringida a mass_provenance == "measured"
+  - `"excluded": {"radius": "etiqueta por umbral (T1)"}`
+  - `"target": "planet_type"`
+- T6 prueba que `radius` nunca entra al pipeline y que la corrida de sensibilidad usa solo filas measured.
+- Cambiar esta lista requiere la regla 6.
+
+### Abierto para el red team (T10)
+- star_radius: ¿la métrica cae de forma anómala al quitarla? Eso indicaría que lleva información del radio planetario más allá de la física esperable.

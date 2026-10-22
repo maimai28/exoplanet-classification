@@ -20,23 +20,36 @@ outputs in `data/processed/` (files and schemas: "Contrato de interfaz" in
 
 <!-- T8 (Mai) -->
 
-This repository audits an earlier classification project. The original label turned out to be a threshold on planet radius, so the task was reframed: **can a planet's size class (below or above 2 R⊕) be predicted from its orbital period and host-star properties alone?** In short: partly. All models clearly beat chance (average precision 0.43–0.52 vs 0.14), none is significantly better than the others, and the signal is concentrated in part of the sample. Every decision is documented in `docs/decisiones.md`.
+This repository audits an earlier classification project. Every label in the original data is reproduced by a single rule, planet radius ≥ 2 R⊕ (623/623 rows), so the task was reframed as: **can a planet's size class (below or above 2 R⊕) be predicted from its orbital period and host-star properties alone?** In short: partly. All models beat a prior baseline (average precision 0.43–0.52 vs 0.14), none is significantly better than the others, and the signal is uneven across the sample. Every decision is documented in `docs/decisiones.md`; the red-team and verification reports are in `reports/`.
 
 ## Data and lineage
 
 <!-- T8 (Mai) -->
 
-- 623 planets × 7 columns (`mass`, `radius`, `orbital_period`, `star_mass`, `star_radius`, `star_teff`, `planet_type`). Exact origin unknown: the values match an older release of the NASA Exoplanet Archive *PSCompPars* table (row-level matching in `data/processed/lineage.csv`). The file is stored unmodified in `data/raw/` with its SHA-256.
-- `radius` is in Jupiter radii. The original label `planet_type` is reproduced exactly (623/623) by the rule R ≥ 2 R⊕ (0.1784 R_J). The original class names ("terrestrial" / "gas_giant") are physically misleading: the boundary sits at the upper edge of the radius valley and separates *size*, not composition. Classes are renamed `small` (R < 2 R⊕, 86 rows) and `large` (537 rows).
-- Planets in the same system are grouped (connected components by host name or identical stellar parameters: 504 groups, largest = 7) so that no system is split between training and test.
+- **File.** `data/raw/exoplanets_clean.csv`: 623 planets × 7 columns (`mass`, `radius`, `orbital_period`, `star_mass`, `star_radius`, `star_teff`, `planet_type`), added to the project on 2026-09-19 (commit `b316a47`) and stored unmodified with its SHA-256 (`data/raw/SHA256SUMS`). Its exact source and the filters that produced it are not documented.
+- **Lineage check (T1).** Rows were matched against a NASA Exoplanet Archive *PSCompPars* query downloaded on 2026-09-18 (6,366 rows; columns `pl_name, pl_bmassj, pl_rade, pl_orbper, discoverymethod, st_mass, st_rad, st_teff`). Matching rule: orbital period within a relative tolerance of 10⁻³ and at least 2 of the other 5 columns within 5 %. Result: 521 rows match a single planet; the other 102 are ambiguous or unmatched. Among the 521, only 284 have the same radius (within 1 %) and 237 the same mass. Our hypothesis is that the file was built from an older release of the table; this is not proven. Row-level results: `data/processed/lineage.csv`.
+- **Mass provenance (T3).** The Archive's `pl_bmassprov` flag was queried on 2026-10-13 for the 521 matched rows (`data/raw/pscomppars_provenance_2026-10-13.csv`).
+- **Filters in this analysis.** None: 623 rows in, 623 rows used by the main run. The exploratory sensitivity run uses the 236 rows with a measured mass (see below).
+- **Label.** `radius` is in Jupiter radii. All 623 labels are reproduced by R ≥ 0.1784 R_J (= 2 R⊕): the largest "terrestrial" planet has R = 0.178000 R_J and the smallest "gas giant" 0.178428 R_J. We therefore treat the label as a radius threshold; the code that generated it is not available. The original names describe composition, which the data do not contain; classes are renamed `small` (R < 2 R⊕, 86 rows) and `large` (537 rows). The 2 R⊕ boundary lies near the upper edge of the radius valley (Fulton et al. 2017, AJ 154, 109).
+- **Grouping.** Planets in the same system are grouped (connected components by host name or identical stellar parameters: 504 groups, largest = 7) so that no system is split between training and test.
 
 ## Leakage verdicts
 
 <!-- T8 (Mai) -->
 
-- `radius` is excluded: the label is a threshold on it.
-- `mass` is excluded from the main model. Comparing each mass with the Chen & Kipping (2017) mass–radius relation used by the Archive: 4 masses are derived from radius, 236 are measured, and 383 cannot be verified because they come from an older catalog version. A mass that may have been computed from radius cannot be used to predict radius.
-- Main model features: `orbital_period`, `star_mass`, `star_radius`, `star_teff`. `star_radius` enters the measured planet radius (R = (Rp/R*)·R*) but does not fix it on its own; its effect is tested by ablation.
+Verdict categories follow the project brief: **leak** (the variable encodes the label or is computed from it), **no leak**, **uncertain** (cannot be decided with the available evidence).
+
+| Variable | Verdict | Reason | Evidence |
+|---|---|---|---|
+| `radius` | leak | The label is reproduced by a threshold on it (623/623). | T1; a test checks that `radius` never enters the model |
+| `mass` | uncertain | 4 masses lie on the Chen & Kipping (2017) mass–radius relation used by the Archive (derived from radius), 236 are measured, 383 cannot be checked against the current catalog. | `data/processed/mass_provenance.csv` (T3b) |
+| `orbital_period` | no leak | Measured from the timing of transits or radial-velocity signals; it does not use the planet's radius. | Agrees with the reference catalog within 10⁻³ for the 521 matched rows (T1) |
+| `star_mass` | no leak | Stellar parameter; it does not use the planet's radius. | Catalog column `st_mass` (T1) |
+| `star_teff` | no leak | Stellar parameter; it does not use the planet's radius. | Catalog column `st_teff` (T1) |
+| `star_radius` | no leak (tested) | The planet radius is computed from it (R = (Rp/R*)·R*), not the reverse, and it does not fix R on its own. | Ablation: removing it lowers AP by 0.007–0.019, p ≥ 0.58 for all models (`reports/ataque_v1.md`, attack a) |
+
+- Main model features: `orbital_period`, `star_mass`, `star_radius`, `star_teff`. `mass` is excluded because a mass computed from radius cannot be used to predict radius, and 383 masses cannot be ruled out.
+- Permuting `radius` leaves every prediction unchanged byte for byte (`reports/ataque_v1.md`, attack b).
 - Sensitivity run: the same models with `mass` added, restricted to the 236 measured rows.
 
 ## Method
@@ -112,10 +125,11 @@ With mass (`sens_with_mass`, features `sensitivity_mass`):
 
 <!-- T8 (Mai) -->
 
-- **What the result means.** A planet's orbital period and its host star carry real information about whether the planet lies above or below ~2 R⊕ — enough to lift average precision 3–4× above chance, but far from a reliable classifier. This is consistent with known trends (short-period giant planets in transit surveys, small planets being more common around cool, low-mass stars), but this analysis does not test any mechanism.
-- **Why the signal is uneven.** The gap between measured and unverifiable rows is most likely a sample effect, not leakage: the main model does not use mass. Measured masses come mostly from radial-velocity follow-up, which favors bright stars and massive planets; the unverifiable rows come from an older catalog release with different detection biases. The models learn properties of *this catalog*; the numbers should not be read as properties of the planet population.
-- **Limitations.** Unknown exact origin of the data and an outdated catalog version; only 86 small planets; no hyperparameter tuning; the label encodes size, not composition; the mass sensitivity run is exploratory.
-- **What changed from the original project.** The original notebook already excluded `radius`, but it kept `mass` (4 of its values are derived from radius and 383 cannot be verified), evaluated each model on a single stratified 80/20 split (about 17 small planets in the test set) without grouping planets by system, and named the classes "terrestrial" and "gas giant". Its best result, F1 = 0.72 for the minority class (Random Forest), depended on `mass`; without it and with grouped, repeated cross-validation, F1 for `small` is 0.38–0.47.
+- **What the result means.** Orbital period and host-star properties carry statistically significant information about whether a planet lies above or below 2 R⊕ (all three models vs baseline, p < 0.001) — enough to lift average precision 3–4× above chance, but far from a reliable classifier. This analysis does not identify the cause: an astrophysical trend and an observational selection effect (next point) are competing explanations.
+- **Observational selection (red-team findings H1, H2).** A transit dims its star by a depth of about (Rp/R*)², so small planets are detected preferentially around small stars. If a large share of this sample comes from transit surveys, part of what the models learn from `star_radius` and `star_mass` is a detection bias rather than a property of planets (hypothesis). The sample is also restricted to planets with a catalogued mass, which shapes which planets are included. The CSV does not contain the discovery method; the reference catalog does (`discoverymethod`) for the 521 matched rows, so the size of the transit effect could be estimated there — not done in this iteration.
+- **Why the signal is uneven.** On the same out-of-fold predictions, Logistic Regression reaches ROC-AUC 0.81 on the 383 unverifiable rows and 0.68 on the 236 measured rows. The main model does not use `mass`, so this is not mass leakage. The red team found that the stellar features separate the classes much less in the measured group (univariate ROC-AUC 0.78 → 0.58; `reports/ataque_v1.md`, H5). Our hypothesis is that the two groups come from different detection channels; it can be tested with the discovery method of the matched rows.
+- **Limitations.** Undocumented source and filters of the data, with values that differ from the current catalog; only 86 small planets; no hyperparameter tuning (Random Forest fits its training folds perfectly, train AP = 1.0); the label encodes size, not composition; the mass sensitivity run is exploratory.
+- **What changed from the original project.** The original notebook (commits `b316a47`, `1f2e02f`; README on `main`) already excluded `radius`, but it kept `mass` among the features, evaluated each model on a single stratified 80/20 split (about 17 small planets in the test set) without grouping planets by system, and named the classes "terrestrial" and "gas giant". Its best reported result was F1 = 0.72 for the minority class (Random Forest) with `mass` included; how much of that came from `mass` was not tested. Here, without `mass` and with grouped, repeated cross-validation, F1 for `small` is 0.38–0.47.
 
 ## Authorship
 
@@ -139,7 +153,7 @@ Model and date of each agent task: the model recorded in the Claude Code session
 | README: opening paragraph, Reproduce, section layout, main results table, Files (T7) | agente: Claude Code, rol Implementador, claude-opus-5-5, 2026-10-18 | 93fc459 |
 | README: Question and label, Data and lineage, Leakage verdicts, Method, interpretation of the results, Discussion (T8) | Mai (texto editado y aprobado por Mai a partir de un borrador de Claude, 2026-10-21) | f2cc43a |
 | README: comparison and sensitivity tables, Authorship layout (T9; assignments by Mai) | agente: Claude Code, rol Implementador, claude-opus-5-5, 2026-10-21 | 922540b, `docs/decisiones.md` (T9) |
-| `reports/ataque_v1.md` (T10) | pendiente | — |
+| `reports/ataque_v1.md` (T10) | T10: agent: Gemini (Antigravity CLI), role Red team, 2026-10-21; T11: agent: Claude Code, role Verifier, claude-opus-5-5, 2026-10-21 | — |
 | `reports/veredicto_v1.md` (T11) | pendiente | — |
 
 - **AI assistance**, under a documented role-based workflow: Claude Code (Anthropic) for planning, tests, implementation and verification; Gemini (Antigravity CLI) as red team; ChatGPT for brief critique. Agent outputs were reviewed and accepted by Mai (GitHub @maimai28); all decisions are recorded in `docs/decisiones.md`.

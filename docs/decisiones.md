@@ -623,3 +623,10 @@ Rama `exp/2026-09-30-auditoria`, sobre `pruebas-1`. No se tocó `tests/`, `data/
 - El notebook se guardó con las salidas de la ejecución 2, sin metadatos de tiempo. Cambian solo los `execution_count` posteriores, los ids aleatorios del `Styler` de la sección 13 y la versión de Python en los metadatos (3.14.4 → 3.14.7, la del entorno actual).
 - **Autoría:** el texto de Mai, solo con formato Markdown. `<Mai>` se escribió como `Mai`: entre corchetes angulares GitHub lo toma como etiqueta HTML y no lo muestra.
 - `uv run pytest -q`: 91 pasan. `uvx ruff check .`: limpio.
+
+### Tabla de autoría (criterio 8, 2026-10-21)
+- Modelo por tarea, sacado de las transcripciones de Claude Code en la ThinkCentre (`~/.claude/projects/`, solo lectura): T2, T3, T3b (las dos corridas), T6, T7 y T9 se hicieron con `claude-opus-5-5` en todos los mensajes. T1 no tiene transcripción en esta máquina; su modelo sale del trailer `Co-Authored-By: Claude Opus 5.5` del commit 8c93eb2.
+- Las fechas son las locales de cada commit de tarea (−0600). Las transcripciones guardan UTC, y algunas caen al día siguiente.
+- Commits b316a47 y 1f2e02f: los dos traen el trailer `Co-Authored-By: Claude Sonnet 5`. Mai eligió "Mai, con asistencia de Claude Sonnet 5".
+- Se agregó una fila para las partes del README que vienen de T7 (párrafo inicial, Reproduce, estructura, tabla principal, Files), porque `git blame` las atribuye a 93fc459 y no a T8 ni a T9.
+- Se quitó la viñeta "Author" de T9; su contenido lo cubre la fila de decisiones.

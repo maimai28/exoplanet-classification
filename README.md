@@ -121,7 +121,27 @@ With mass (`sens_with_mass`, features `sensitivity_mass`):
 
 <!-- T9 -->
 
-- **Author:** Mai (GitHub [@maimai28](https://github.com/maimai28)). Defined the question, made every analysis decision (label, leakage verdicts, evaluation scheme), wrote the interpretation and accepted the results.
+Model and date of each agent task: the model recorded in the Claude Code session transcripts of the task (for T1, the `Co-Authored-By` trailer of its commit) and the local date of the task commit.
+
+| Part | Authorship | Evidence |
+|---|---|---|
+| Decisions (T0, T4, T4b, T5) and acceptance of the results | Mai | `docs/bitacora.md`, `docs/decisiones.md` |
+| Commits b316a47 and 1f2e02f (original project: notebook, README, `exoplanets_clean.csv`) | Mai, con asistencia de Claude Sonnet 5 (trailer Co-Authored-By), 2026-09-19 | `git show -s b316a47 1f2e02f` |
+| Data: `data/raw/exoplanets_clean.csv` | Bytes from commit b316a47 (row above); exact origin unknown | `data/raw/SHA256SUMS` |
+| Data: move to `data/raw/` and `SHA256SUMS` (T2) | agente: Claude Code, rol Implementador, claude-opus-5-5, 2026-10-13 | 94fb11b |
+| Data: `data/raw/pscomppars_provenance_2026-10-13.csv` (T3) | agente: Claude Code, rol Especialista, claude-opus-5-5, 2026-10-13 | 19605bb |
+| Data: `data/processed/lineage.csv` (T1; `hostname` from T3) | agente: Claude Code, rol Especialista, claude-opus-5-5, 2026-10-02 (T1) and 2026-10-13 (T3) | 8c93eb2, 19605bb |
+| Data: `data/processed/mass_provenance.csv` (T3b and its re-run) | agente: Claude Code, rol Especialista, claude-opus-5-5, 2026-10-13 and 2026-10-15 | 43a9b14, 1617f94 |
+| Notebook §1, §3, §7, §12, §13 (code from the original notebook, adapted to T4, T4b and T5) | Original: commits b316a47 and 1f2e02f; adaptation: agente: Claude Code, rol Implementador, claude-opus-5-5, 2026-10-18 | 93fc459 |
+| Notebook §2, §4–§6, §8–§11, §14 (written or rewritten in T7) | agente: Claude Code, rol Implementador, claude-opus-5-5, 2026-10-18 | 93fc459 |
+| Notebook §10, cell `readme-tables` (T9) | agente: Claude Code, rol Implementador, claude-opus-5-5, 2026-10-21 | 922540b |
+| `tests/` and `reports/pruebas_v1.md` (T6) | agente: Claude Code, rol Tester, claude-opus-5-5, 2026-10-18 | dd284e2, tag `pruebas-1` |
+| README: opening paragraph, Reproduce, section layout, main results table, Files (T7) | agente: Claude Code, rol Implementador, claude-opus-5-5, 2026-10-18 | 93fc459 |
+| README: Question and label, Data and lineage, Leakage verdicts, Method, interpretation of the results, Discussion (T8) | Mai (texto editado y aprobado por Mai a partir de un borrador de Claude, 2026-10-21) | f2cc43a |
+| README: comparison and sensitivity tables, Authorship layout (T9; assignments by Mai) | agente: Claude Code, rol Implementador, claude-opus-5-5, 2026-10-21 | 922540b, `docs/decisiones.md` (T9) |
+| `reports/ataque_v1.md` (T10) | pendiente | — |
+| `reports/veredicto_v1.md` (T11) | pendiente | — |
+
 - **AI assistance**, under a documented role-based workflow: Claude Code (Anthropic) for planning, tests, implementation and verification; Gemini (Antigravity CLI) as red team; ChatGPT for brief critique. Agent outputs were reviewed and accepted by the author; all decisions are recorded in `docs/decisiones.md`.
 - **Data:** NASA Exoplanet Archive, *PSCompPars* (older release). Mass–radius relation: Chen & Kipping (2017).
 

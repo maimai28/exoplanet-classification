@@ -142,7 +142,7 @@ Model and date of each agent task: the model recorded in the Claude Code session
 | `reports/ataque_v1.md` (T10) | pendiente | — |
 | `reports/veredicto_v1.md` (T11) | pendiente | — |
 
-- **AI assistance**, under a documented role-based workflow: Claude Code (Anthropic) for planning, tests, implementation and verification; Gemini (Antigravity CLI) as red team; ChatGPT for brief critique. Agent outputs were reviewed and accepted by the author; all decisions are recorded in `docs/decisiones.md`.
+- **AI assistance**, under a documented role-based workflow: Claude Code (Anthropic) for planning, tests, implementation and verification; Gemini (Antigravity CLI) as red team; ChatGPT for brief critique. Agent outputs were reviewed and accepted by Mai (GitHub @maimai28); all decisions are recorded in `docs/decisiones.md`.
 - **Data:** NASA Exoplanet Archive, *PSCompPars* (older release). Mass–radius relation: Chen & Kipping (2017).
 
 ## Files

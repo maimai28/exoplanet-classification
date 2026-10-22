@@ -1,191 +1,181 @@
-# Veredicto v1 — T11, Verificador (2026-10-21)
+# Veredicto v1 (re-verificación) — T11, Verificador (2026-10-22)
 
-**Expediente:** `exp/2026-09-30-auditoria`, iteración 1. **Versión verificada:** commit `760cc1f` (HEAD).
+**Expediente:** `exp/2026-09-30-auditoria`, iteración 1. **Versión verificada:** commit `476b930` (HEAD), árbol de trabajo limpio.
 **Referencia:** criterio de éxito de `docs/brief.md`, con el texto de los criterios 1, 4, 6 y 12 enmendado el 2026-10-18 (el que está hoy en el brief), y el contrato de `docs/plan.md`. No se leyó `docs/decisiones.md`.
 **Entorno:** ThinkCentre, Debian 13, uv 0.12.10, ruff 0.16.9, Python 3.14.
 
-> **Cambio sin commit en el árbol de trabajo.** Al empezar, `git status` mostraba `M README.md`: un párrafo nuevo en *Discussion* ("Observational selection (red-team findings H1, H2)"), que no escribió este rol. Este veredicto evalúa el README de HEAD. Ese párrafo se comenta aparte en el paso 5.
+> **Este archivo reemplaza al veredicto de `aa9a472`** (NO CUMPLE en los criterios 3, 4 y 9 sobre `760cc1f`). Esa versión sigue en el historial de git. Desde `760cc1f` solo cambiaron `README.md` (`16df2b4`, T8 iteración 2), `docs/bitacora.md` y este archivo. `git diff --stat 760cc1f HEAD -- classification.ipynb src/ tests/ pyproject.toml uv.lock data/` sale vacío.
 
 ## Veredicto global: **NO CUMPLE**
 
-Cumplen 11 de 14 criterios. No cumplen el **3** (linaje en el README), el **4** (veredicto por variable en el README) y el **9** (afirmaciones sin evidencia o hipótesis dichas como hechos). Los tres fallos son de prosa del README. El código, los datos, la reproducibilidad y las métricas cumplen. En HEAD, los dos hallazgos mayores del red team (H1, H2) no están atendidos.
+Cumplen 13 de 14 criterios. La iteración 2 de T8 resolvió los criterios 3 y 4 y los hallazgos H1 y H2. Sigue sin cumplir el **9**, por tres afirmaciones del README:
+
+1. `README.md:45` dice que 4 masas caen sobre la relación de Chen & Kipping, pero `mass_provenance.csv` solo tiene 3 filas `on_relation`.
+2. `README.md:160` da como hecho la fuente "*PSCompPars* (older release)", que `README.md:29-30` declara no documentada y presenta como hipótesis.
+3. `README.md:156-157` atribuye `reports/ataque_v1.md` al Verificador (T11) y marca como "pendiente" un veredicto que ya existe.
+
+Reproducibilidad, datos, código y métricas: cumplen sin cambios respecto a `aa9a472`.
 
 ## Paso 1 — Pruebas intactas
 
 ```
-$ git rev-parse --short pruebas-1^{commit}   → dd284e2
-$ git diff pruebas-1 HEAD -- tests/ | wc -c  → 0
-$ git diff pruebas-1 -- tests/ | wc -c       → 0   (árbol de trabajo incluido)
+$ git diff pruebas-1 HEAD -- tests/          → (vacío)
+$ git diff pruebas-1 HEAD --stat -- tests/   → (vacío)
 ```
-Vacío. Se continúa.
+Se continúa.
 
 ## Paso 2 — Ejecuciones
 
 | Comando | Resultado |
 |---|---|
-| `uv sync --locked` | `Resolved 119 packages`, `Checked 115 packages`, sin error |
-| Comando del contrato, ejecución 1 | exit 0, 34 s |
-| Comando del contrato, ejecución 2 | exit 0, 34 s |
+| `uv sync --locked` | `Resolved 119 packages`, `Checked 115 packages`, exit 0 |
+| Comando del contrato (`README.md:12`), ejecución 1 | exit 0, 33 s |
+| Comando del contrato, ejecución 2 | exit 0, 35 s |
 | `cmp` de las 11 salidas, ejecución 1 vs 2 | 11/11 idénticas |
-| `cmp` de las 11 salidas, ejecución 1 vs commit | 11/11 idénticas (`git status` sin cambios en `data/processed/`) |
-| Clon limpio (`git clone` → `uv sync --locked` → comando del contrato), en el scratchpad | exit 0, 39 s; 11/11 idénticas a la ejecución 1 |
-| `uv run pytest -q` | `91 passed in 72.78s` |
+| `git status --short data/processed` tras las dos ejecuciones | vacío (iguales a lo que está en el commit) |
+| `uv run pytest -q` | `91 passed in 72.71s` |
 | `uvx ruff check .` | `All checks passed!` |
 
-SHA-256 (primeros 16 hex) de las salidas: `labels.csv` 550b546c5eff54fa, `features.json` 2bdfbe5f945a55a8, `folds.csv` b75bd9108162abca, `folds_sensitivity.csv` be8543e5c6a427dc, `predictions.csv` f5a023a0aa747a99, `metrics_by_fold.csv` cbaa187fe5163c39, `metrics.json` 84fb4118ea58839f, `metrics_sensitivity.json` 3280c6aa5961f046, `metrics_by_mass_provenance.json` 3f235f46f6cd9d99, `comparisons.json` 5aa5fd9e3ce09b51, `grouping_report.json` d0dfcbd29f24c0e6.
+SHA-256 (primeros 16 hex), idénticos a los de `aa9a472`: `labels.csv` 550b546c5eff54fa, `features.json` 2bdfbe5f945a55a8, `folds.csv` b75bd9108162abca, `folds_sensitivity.csv` be8543e5c6a427dc, `predictions.csv` f5a023a0aa747a99, `metrics_by_fold.csv` cbaa187fe5163c39, `metrics.json` 84fb4118ea58839f, `metrics_sensitivity.json` 3280c6aa5961f046, `metrics_by_mass_provenance.json` 3f235f46f6cd9d99, `comparisons.json` 5aa5fd9e3ce09b51, `grouping_report.json` d0dfcbd29f24c0e6.
+
+No se repitió el clon limpio: `aa9a472` lo hizo sobre `760cc1f`, y desde entonces no cambió ningún archivo que afecte la ejecución (ver la nota de arriba).
 
 ## Paso 3 — Los 14 criterios
 
-| # | Criterio | Veredicto | Evidencia (resumen; el detalle va abajo) |
+| # | Criterio | Veredicto | Evidencia |
 |---|---|---|---|
-| 1 | Reproducible | **cumple** | Clon limpio + `uv sync --locked` + comando del README (`README.md:10-13`): exit 0; dos ejecuciones con las 11 salidas idénticas byte a byte; `test_reproducibility.py` y `test_format.py` en verde |
-| 2 | Datos crudos inmutables | **cumple** | `sha256sum data/raw/exoplanets_clean.csv` = `git show b316a47:exoplanets_clean.csv \| sha256sum` = `SHA256SUMS` = 15f10a81…6378; el notebook lee `data/raw/exoplanets_clean.csv` (celda `setup`, `RAW_CSV`); `test_raw_data.py` en verde |
-| 3 | Linaje documentado | **no cumple** | El README no registra la consulta o descarga con fecha ni ningún filtro con sus filas antes y después (ver 3.1). La parte de `docs/decisiones.md` no se revisó por instrucción |
-| 4 | Veredicto de fuga por variable | **no cumple** | Lo automatizable cumple (`test_features.py`, `test_mass_provenance.py`, filas `measured`, `metrics_by_mass_provenance.json`). La prosa no: `README.md:37-40` no da veredicto, razón ni evidencia de procedencia para `orbital_period`, `star_mass` y `star_teff` (ver 3.2) |
-| 5 | Sin fuga entre particiones | **cumple** | `test_no_group_split_across_folds` en verde; recálculo propio: 0 grupos con más de un `fold` por `repeat` en `folds.csv` (3115 líneas) y `folds_sensitivity.csv` (1180) |
-| 6 | Métricas con incertidumbre | **cumple** | Hiperparámetros idénticos a 1f2e02f; SGKF 5 × semillas 0–4, sin CV interior; preprocesamiento dentro del `Pipeline`, ajustado por fold; pruebas de métricas y comparaciones en verde (ver 3.3) |
-| 7 | README = ejecución | **cumple** | `test_readme.py` en verde; recálculo propio: 0 discrepancias en la tabla principal, las dos de sensibilidad y la de comparaciones |
-| 8 | Autoría declarada | **cumple** | `README.md:120-146` cubre §1–§14 del notebook, el README por partes, `tests/`, los datos y b316a47/1f2e02f; modelos y fechas coinciden con los commits (ver 3.4) |
-| 9 | Afirmaciones sostenidas | **no cumple** | Hipótesis dichas como hechos y afirmaciones sin evidencia en `README.md:23, 29, 37, 38, 39, 115, 116, 118` (ver 3.5) |
-| 10 | Sin funcionalidad nueva | **cumple** | `git diff main HEAD -- classification.ipynb src/`: los mismos tres modelos + `DummyClassifier(strategy="prior")` (admitido por el criterio 6 y S7); las variables son un subconjunto de las originales; 0 coincidencias de búsqueda de hiperparámetros o modelos nuevos (ver 3.6) |
+| 1 | Reproducible | **cumple** | `uv sync --locked` + comando de `README.md:10-13`: exit 0; dos ejecuciones con 11/11 salidas idénticas byte a byte; `test_reproducibility.py` y `test_format.py` en verde |
+| 2 | Datos crudos inmutables | **cumple** | `sha256sum data/raw/exoplanets_clean.csv` = `git show b316a47:exoplanets_clean.csv \| sha256sum` = `SHA256SUMS` = 15f10a81…6378; `RAW_CSV = Path("data/raw/exoplanets_clean.csv")` en la celda `setup`; `test_raw_data.py` en verde |
+| 3 | Linaje documentado | **cumple** (parte del README) | `README.md:29-34`: fuente y filtros de origen declarados "not documented", con lo que se intentó (T1); descarga de referencia del 2026-09-18 y consulta T3 del 2026-10-13; filtros del análisis 623 → 623 (sensibilidad: 236); regla de etiquetado. La parte de `docs/decisiones.md` no se revisó por instrucción (ver 3.1) |
+| 4 | Veredicto de fuga por variable | **cumple** | Tabla en `README.md:42-49`: las cinco variables con veredicto en las categorías del brief, razón y evidencia; pruebas de `features.json`, de las filas `measured` y de `metrics_by_mass_provenance.json` en verde (ver 3.2) |
+| 5 | Sin fuga entre particiones | **cumple** | `test_folds.py` en verde; `folds.csv` sin cambios respecto a `aa9a472`, que dio 0 grupos partidos |
+| 6 | Métricas con incertidumbre | **cumple** | Hiperparámetros de la celda `models` idénticos a los de `main` (`class_weight="balanced"`, `max_iter=1000`, `n_estimators=300`, SVC por defecto, escalado en el `Pipeline`); SGKF 5 × semillas 0–4; ajuste con `clone(model).fit(X[~test], …)` por fold; `comparisons.json` con 6 pares, `df` 24 y ρ 0.250008; pruebas de métricas en verde (ver 3.3) |
+| 7 | README = ejecución | **cumple** | `test_readme.py` en verde; recálculo propio de las tablas de métricas (4 filas), de sensibilidad (4 + 4) y de comparaciones (6): 0 discrepancias a 3 decimales |
+| 8 | Autoría declarada | **cumple** | `README.md:140-155` asigna el notebook §1–§14, las partes del README, `tests/`, los datos y b316a47/1f2e02f. Tiene defectos en las filas de `reports/`, que se cuentan en el criterio 9 (ver 3.4) |
+| 9 | Afirmaciones sostenidas | **no cumple** | `README.md:45` (4 sobre la relación vs 3 `on_relation`), `README.md:160` (hipótesis dicha como hecho), `README.md:156-157` (autoría falsa, sin evidencia) (ver 3.5) |
+| 10 | Sin funcionalidad nueva | **cumple** | Notebook y `src/` sin cambios desde `760cc1f`. En `git diff main HEAD -- classification.ipynb src/ pyproject.toml`, las líneas añadidas tienen 0 coincidencias de búsqueda de hiperparámetros o modelos nuevos; `pyproject.toml` solo agrega `scipy` y `pytest`; las variables son un subconjunto de las de `main` |
 | 11 | Calidad | **cumple** | `91 passed`; `All checks passed!` |
-| 12 | Pregunta y etiqueta | **cumple** | Pregunta en una frase, `README.md:23`; definición y razón del cambio de nombre, `README.md:30`; `test_labels.py` en verde (ver 3.7) |
-| 13 | Particiones agrupadas por sistema | **cumple** | `test_folds.py` y `test_grouping_report.py` en verde; `grouping_report.json`: `n_groups` 504, `max_group_size` 7, `n_groups_multi_hostname` 4 (igual que S4) |
-| 14 | Emparejamiento uno a uno | **cumple** | `lineage.csv`: 623 filas, 623 `row_id` distintos; `unique` 521, `none` 83, `ambiguous` 19; 0 `pl_name` repetidos entre las `unique`; `test_lineage.py` en verde |
+| 12 | Pregunta y etiqueta | **cumple** | Pregunta en una frase en negritas (`README.md:23`); definición R ≥ 0.1784 R_J (= 2 R⊕), `small`/`large` y razón del cambio de nombre ("The original names describe composition, which the data do not contain", `README.md:33`); `test_labels.py` en verde |
+| 13 | Particiones agrupadas por sistema | **cumple** | `test_folds.py` y `test_grouping_report.py` en verde; `grouping_report.json`: `n_groups` 504, `max_group_size` 7, `n_groups_multi_hostname` 4 |
+| 14 | Emparejamiento uno a uno | **cumple** | `lineage.csv`: 623 filas; `unique` 521, `none` 83, `ambiguous` 19; `test_lineage.py` en verde |
 
 ### 3.1 Criterio 3 (revisión manual)
 
-El criterio pide que **el README y** `docs/decisiones.md` registren la fuente, la consulta o descarga con fecha, cada filtro con sus filas antes y después, y la regla de etiquetado.
+| Elemento del criterio | `README.md` | Revisión |
+|---|---|---|
+| Fuente | 29: "Its exact source and the filters that produced it are not documented" | Se declara desconocida, como pide el criterio |
+| Lo que se intentó | 30: emparejamiento con la descarga *PSCompPars* del 2026-09-18, regla y resultado (521 `unique`, 102 sin pareja o ambiguas) | 521 y 102 (83 + 19) coinciden con `lineage.csv` |
+| Consulta o descarga con fecha | 29: archivo agregado el 2026-09-19 (`b316a47`; `git show -s` da 2026-09-19 01:05 −0500); 30: descarga del 2026-09-18; 31: consulta `pl_bmassprov` del 2026-10-13 sobre 521 filas | `pscomppars_provenance_2026-10-13.csv` tiene 521 filas |
+| Filtros con filas antes y después | 29: los filtros de origen son desconocidos; 32: "None: 623 rows in, 623 rows used"; sensibilidad con 236 | `predictions.csv`: 623 filas por (modelo, repetición) en `main` y 236 en `sens_*` |
+| Regla de etiquetado | 33 | Recálculo: R ≥ 2/11.208981 R_J reproduce 623/623; máximo `terrestrial` 0.178, mínimo `gas_giant` 0.178428 |
 
-- Fuente: `README.md:29`, "Exact origin unknown: the values match an older release of the NASA Exoplanet Archive *PSCompPars* table". Declara lo desconocido. Lo que se intentó solo aparece como "row-level matching in `data/processed/lineage.csv`".
-- Consulta o descarga con fecha: no está en el texto del README. La consulta TAP de T3 solo se ve en el nombre de archivo `pscomppars_provenance_2026-10-13.csv`, dentro de la tabla de autoría (`README.md:132`). La descarga del Proyecto 1 (2026-09-18, SHA-256 e5570cba…) no aparece.
-- Filtros con filas antes y después: no hay ninguno. El README no dice cómo se pasó del catálogo (5906 filas en el Proyecto 1, según S1) a 623, ni que ese paso sea "desconocido".
-- Regla de etiquetado: sí, `README.md:30` (R ≥ 2 R⊕, 623/623).
-- `docs/decisiones.md`: no revisado, por instrucción de esta tarea. Aunque esa parte estuviera completa, la del README falta.
+Sobre `docs/decisiones.md`: no se leyó, por instrucción. Solo se ve en los metadatos de git que los commits de T1 (`8c93eb2`, +155 líneas en `docs/decisiones.md`) y de T3 (`19605bb`) lo modificaron. El veredicto "cumple" cubre la parte del README. Que `decisiones.md` cumpla su parte queda a cargo de Mai.
 
 ### 3.2 Criterio 4 (revisión manual de la prosa)
 
-El criterio pide que el README dé "un veredicto para cada una de las cinco variables, con su razón y la evidencia de procedencia", con las categorías fuga / sin fuga / incierta.
-
-| Variable | `README.md` | ¿Veredicto? | ¿Razón? | ¿Evidencia de procedencia? |
+| Variable | Veredicto (`README.md`) | Razón | Evidencia | Revisión |
 |---|---|---|---|---|
-| `mass` | 38 | Implícito ("excluded from the main model"), sin categoría | Sí ("may have been computed from radius") | Sí: conteos 4 / 236 / 383, iguales a `mass_provenance.csv` |
-| `orbital_period` | 39 | No (solo aparece en la lista "Main model features") | No | No |
-| `star_mass` | 39 | No | No | No |
-| `star_radius` | 39 | No, sin categoría | Parcial (entra en R = (Rp/R*)·R*) | No; "its effect is tested by ablation", pero el README no da el resultado ni cita dónde está |
-| `star_teff` | 39 | No | No | No |
+| `mass` | uncertain (45) | 4 derivadas, 236 medidas, 383 no verificables | `mass_provenance.csv` (T3b) | Los conteos 4/236/383 coinciden. La frase "4 masses lie on the … relation" es incorrecta: se cuenta en el criterio 9 |
+| `orbital_period` | no leak (46) | Se mide por tiempos de tránsito o de VR; no usa el radio | Coincide con el catálogo a 10⁻³ en 521 filas | Cumple. Observación: la coincidencia a 10⁻³ es la regla de emparejamiento (`README.md:30`), así que se cumple por construcción. Sirve como evidencia de que el valor es el `pl_orbper` del catálogo, no como confirmación independiente |
+| `star_mass` | no leak (47) | Parámetro estelar | Columna `st_mass` (T1) | Cumple |
+| `star_teff` | no leak (48) | Parámetro estelar | Columna `st_teff` (T1) | Cumple |
+| `star_radius` | no leak (tested) (49) | R = (Rp/R*)·R*: el radio del planeta sale de él, no al revés | Ablación: ΔAP 0.007–0.019, p ≥ 0.58 | Reproducido por este rol con los mismos folds: ΔAP +0.0072 / +0.0186 / +0.0094, p 0.5832 / 0.6039 / 0.7137. Coincide con `reports/ataque_v1.md` |
 
-`radius` (`README.md:37`) no es una de las cinco. Lo demás del criterio sí está: la separabilidad con una variable se imprime (celda `separability`) y las métricas por procedencia van en `metrics_by_mass_provenance.json`, con las llaves `measured`/`derived`/`unverifiable` y `n` = 236/4/383.
+Las definiciones de `README.md:40` corresponden a las del brief. La de "leak" dice "computed from [the label]" y no menciona el radio, pero cada fila de la tabla razona sobre el radio, que es lo que pide el brief.
 
 ### 3.3 Criterio 6 (revisión manual del método)
 
-- **Hiperparámetros.** `git show main:classification.ipynb`, celda 14, frente a HEAD, celda `models`: `Pipeline(StandardScaler, LogisticRegression(class_weight="balanced", random_state=42, max_iter=1000))`, `RandomForestClassifier(class_weight="balanced", n_estimators=300, random_state=42)` y `Pipeline(StandardScaler, SVC(class_weight="balanced", kernel="rbf", random_state=42))`, idénticos en los dos. Se agrega `DummyClassifier(strategy="prior")`.
-- **Esquema.** Celda `groups-and-folds`: `StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=repeat)` con `REPEATS = range(5)`. Sin CV interior y sin conjunto de prueba aparte.
-- **Ajuste por fold.** Celda `predictions`: `clone(model).fit(X[~test], y_run[~test])`. El escalado vive dentro del `Pipeline`, así que se ajusta solo con el entrenamiento del fold.
-- **Score.** `predict_proba[:, 1]` con `classes_ == ["large", "small"]` (afirmado con `assert`); `decision_function` en el SVM.
-- **Comparación.** Celda `comparisons`: t = d̄ / √((1/J + ρ)·s²), `df` = 24, p de dos colas; ρ = 0.250008. Hay 6 pares en `main`.
-- **Sensibilidad.** `n_small` = 17 < 25 → `exploratory` = true y `comparisons.json` solo tiene la llave `main`.
+El notebook no cambió desde `760cc1f`; se mantiene la revisión de `aa9a472`. Se volvió a comprobar:
+
+- Celda `models` de HEAD frente a `git show main:classification.ipynb`: `LogisticRegression(class_weight="balanced", random_state=RANDOM_STATE, max_iter=1000)`, `RandomForestClassifier(class_weight="balanced", n_estimators=300, random_state=RANDOM_STATE)` y `SVC(class_weight="balanced", kernel="rbf", random_state=RANDOM_STATE)`, con `StandardScaler` en el `Pipeline` de LR y SVM. Son idénticos. Se agrega `DummyClassifier(strategy="prior")`.
+- Celda `groups-and-folds`: `StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=repeat)` con `REPEATS = range(5)`. Sin CV interior.
+- Sensibilidad: `n_small` = 17 < 25, `exploratory` = true, y `comparisons.json` solo tiene la llave `main`.
 
 ### 3.4 Criterio 8 (revisión manual)
 
-- **Notebook por secciones.** El notebook tiene §1–§14. La tabla de autoría (`README.md:135-137`) asigna §1, §3, §7, §12 y §13 (código original adaptado), §2, §4–§6, §8–§11 y §14 (T7), y la celda `readme-tables` de §10 (T9). No falta ninguna sección.
-- **Commits.** b316a47 y 1f2e02f: "Mai, con asistencia de Claude Sonnet 5", 2026-09-19. Coincide con su trailer `Co-Authored-By: Claude Sonnet 5`.
-- **Tareas de agente.** Las de T1, T2, T3, T3b, T6, T7 y T9 dicen claude-opus-5-5. Coincide con el trailer `Claude Opus 5.5` de 8c93eb2, 94fb11b, 19605bb, 43a9b14, 1617f94, dd284e2, 93fc459, 922540b y 834757e, y las fechas coinciden con las de esos commits.
-- **T8.** Atribuida a Mai, a partir de un borrador de Claude. f2cc43a no tiene trailer, lo cual es coherente.
-- **Observaciones que no cambian el veredicto:**
-  - `README.md:142` dice "pendiente" para `reports/ataque_v1.md`, pero ya está en 760cc1f.
-  - `README.md:145` dice "Gemini (Antigravity CLI) as red team". Ni `reports/ataque_v1.md` ni 760cc1f lo registran, así que no se pudo comprobar.
-  - Hay celdas en español dentro de un README en inglés ("agente", "con asistencia de", "pendiente").
+Las partes que exige el criterio están asignadas (la cobertura del notebook §1–§14 no cambió respecto a `aa9a472`). Hay tres defectos en las filas de autoría:
+
+- `README.md:156`, fila de `reports/ataque_v1.md`: "T10: agent: Gemini (Antigravity CLI) …; **T11: agent: Claude Code, role Verifier**, claude-opus-5-5, 2026-10-21". T11 no escribió ese archivo. Escribió `reports/veredicto_v1.md` (`aa9a472`). Parece que la atribución de T11 quedó en la fila equivocada.
+- `README.md:157`: `reports/veredicto_v1.md` dice "pendiente", pero existe desde `aa9a472`.
+- `README.md:154`: la fila de T8 cita solo `f2cc43a` (2026-10-21). Falta la iteración 2 (`16df2b4`, 2026-10-22).
+
+`reports/` no está en la lista del criterio 8, así que el criterio cumple. Las dos primeras son afirmaciones factuales falsas, sin evidencia ("—"), y se cuentan en el criterio 9.
 
 ### 3.5 Criterio 9 (revisión manual de la prosa)
 
-Los números del README están respaldados (paso 4). No cumplen las afirmaciones siguientes:
+Ya están corregidas las ocho afirmaciones de `aa9a472` (antes en las líneas 23, 29, 37, 38, 39, 115, 116 y 118). Ahora se dicen como hipótesis ("Our hypothesis…", "(hypothesis)", "how much of that came from `mass` was not tested"), citan su fuente (`reports/ataque_v1.md`, ataques a y b, H5; "README on `main`") o se quitaron.
+
+**No cumplen:**
 
 | `README.md` | Afirmación | Problema |
 |---|---|---|
-| 23 | "The original label turned out to be a threshold on planet radius" | Hipótesis dicha como hecho. El paso que generó la etiqueta no está versionado (S1), y S5/T4b manda reportarla "como hipótesis sostenida (623/623)". Es el ejemplo literal del criterio. La línea 30 sí lo dice bien ("reproduced exactly … by the rule") |
-| 37 | "the label is a threshold on it" | El mismo problema que en la línea 23 |
-| 29 | "the values match an older release of … *PSCompPars*" | Inferencia dicha como hecho: solo 521/623 filas tienen pareja `unique` en `lineage.csv`, y 383 masas no coinciden con el Proyecto 1. Lo de "older release" es la hipótesis que explica esa discrepancia |
-| 38 | "383 cannot be verified because they come from an older catalog version" | Causa sin evidencia citada. Lo que está establecido es que no coinciden a ±1 % con el Proyecto 1 |
-| 39 | "its effect is tested by ablation" | El README no da el resultado ni cita la fuente (la ablación solo está en `reports/ataque_v1.md`, ataque (a)) |
-| 115 | "consistent with known trends (short-period giant planets in transit surveys, small planets being more common around cool, low-mass stars)" | Afirmación de literatura sin cita. Además, es justo lo que H1 atribuye a un sesgo de detección (ver paso 5) |
-| 116 | "Measured masses come mostly from radial-velocity follow-up …; the unverifiable rows come from an older catalog release with different detection biases" | Sin evidencia: los datos no registran el método de descubrimiento (lo reconoce el propio párrafo sin commit del árbol de trabajo) |
-| 118 | "Its best result, F1 = 0.72 …, depended on `mass`" | La cifra es correcta (1f2e02f, celda 16: F1 = 0.718; 17 `terrestrial` en la prueba), pero no cita el commit. Además, "depended on mass" no está probado: entre los dos resultados cambiaron a la vez la masa, el esquema de partición y el agrupamiento |
+| 45 | "4 masses lie on the Chen & Kipping (2017) mass–radius relation used by the Archive (derived from radius)" | La evidencia que cita la contradice. En `mass_provenance.csv` hay 3 filas `on_relation` (53, 284, 424). La cuarta `derived`, la fila 460, es `not_testable` con `low_precision` (residuo 0.138) y quedó `derived` porque su masa coincide con el Proyecto 1 y `pl_bmassprov` = `M-R relationship`. "4 derived" es correcto; "4 lie on the relation", no. La versión de `760cc1f` decía "4 masses are derived from radius", que era correcto, así que el error entró en la iteración 2 |
+| 160 | "**Data:** NASA Exoplanet Archive, *PSCompPars* (older release)" | Da como hecho la fuente, que `README.md:29` declara no documentada y `README.md:30` presenta como hipótesis no probada ("this is not proven"). Es el patrón que pone de ejemplo el criterio. Ya estaba en `760cc1f` y el veredicto de `aa9a472` no lo señaló |
+| 156-157 | Autoría de `reports/ataque_v1.md` asignada en parte a T11; `reports/veredicto_v1.md` "pendiente" | Afirmaciones falsas según el historial de git (`760cc1f`, `aa9a472`), con "—" en la columna de evidencia (ver 3.4) |
 
-Hay más cifras correctas que tampoco citan su archivo, aunque están en él: `README.md:30` (86/537, `labels.csv`), 31 (504 grupos y un máximo de 7, `grouping_report.json`), 38 (4/236/383, `mass_provenance.csv`) y 72 (ROC-AUC 0.81/0.68, `metrics_by_mass_provenance.json`).
+**No se pueden comprobar con las fuentes de este rol** (no bloquean, pero Mai debería revisarlas):
 
-### 3.6 Criterio 10 (revisión del diff)
+- `README.md:30`, "6,366 rows", la lista de columnas y la regla de emparejamiento ("10⁻³ … at least 2 of the other 5 columns within 5 %"): solo están en la descarga del Proyecto 1 (fuera del repo) y, presumiblemente, en `docs/decisiones.md`. Citan la descarga con su fecha, que es lo que pide el criterio.
+- `README.md:30`, "only 284 have the same radius (within 1 %)": **coincidencia sospechosa.** En `mass_provenance.csv`, `mass_matches_p1` da 237 `true` y **284 `false`**. El 237 del README coincide con las masas que sí coinciden. El 284 es justo el número de masas que *no* coinciden. Puede ser casualidad, pero hay que comprobarlo con la descarga del Proyecto 1.
 
-`git diff --stat main HEAD` incluye 49 archivos. En lo que corre, el diff contiene:
+**Observaciones que no cambian el veredicto** (mismo estándar que en `aa9a472`: cifras correctas sin archivo citado):
 
-- **Notebook.** La lista `FEATURES` de `main` (`mass`, `orbital_period`, `star_mass`, `star_radius`, `star_teff`) pasa a `features.json`: `main` tiene 4 de esas 5 y `sensitivity_mass` tiene las 5. No hay variables nuevas.
-- **`src/t3b_mass_provenance.py`.** Clasifica la procedencia de la masa (alcance 2) y no entrena modelos.
-- **Búsqueda de patrones.** `grep -cE 'GridSearch|RandomizedSearch|HalvingGrid|cross_val|BayesSearch|optuna|param_grid|XGB|LGBM|GradientBoosting|KNeighbors|MLPClassifier'` sobre las líneas añadidas (sin imágenes) da 0.
-- **`pyproject.toml`.** Solo agrega `scipy` y `pytest` (dev), lo que admite el brief en Restricciones.
-
-### 3.7 Criterio 12 (revisión manual)
-
-- **Pregunta.** En una frase, en negritas, en `README.md:23`: "can a planet's size class (below or above 2 R⊕) be predicted from its orbital period and host-star properties alone?"
-- **Etiqueta.** `README.md:30`: `small` (R < 2 R⊕, 86) y `large` (537), renombradas desde `planet_type`.
-- **Razón del cambio de nombre.** También en `README.md:30`: "physically misleading … separates *size*, not composition".
-- **Mapeo.** `test_size_class_mapping_on_all_rows` está en verde. Recálculo propio: la regla R ≥ 2/11.208981 R_J reproduce 623/623.
-- **Observación.** La pregunta, la definición y la razón quedan en dos párrafos, no en una sola frase. Se lee "en una frase" como referido a la pregunta, y por eso se da por cumplido.
+- Cifras correctas sin archivo citado: `README.md:33` (86/537, `labels.csv`), 34 (504 y 7, `grouping_report.json`), 85 y 130 (ROC-AUC 0.81/0.68, `metrics_by_mass_provenance.json`) y 131 ("train AP = 1.0", que solo está en `reports/ataque_v1.md`, H3; este rol lo reprodujo: 1.0000 ± 0.0000).
+- `README.md:130`, "univariate ROC-AUC 0.78 → 0.58". Recálculo con `max(AUC, 1 − AUC)`: en `unverifiable`, `star_radius` 0.794, `star_teff` 0.770 y `star_mass` 0.805; en `measured`, 0.579, 0.578 y **0.672**. El 0.58 vale para dos de las tres variables, y "0.78" no aparece tal cual en H5 (que da 0.77–0.80). Está dentro de lo que cita, pero es impreciso.
+- `README.md:33`, la cita de Fulton et al. (2017), AJ 154, 109, es correcta.
 
 ## Paso 4 — Números del README frente a `data/processed/`
 
 Recalculado con un script de solo lectura sobre las salidas de esta ejecución:
 
-- Tablas entre marcadores: `metrics`, `comparisons` y las dos de `sensitivity`. **0 discrepancias.**
-- Cifras en la prosa:
-
 | Afirmación (`README.md`) | Valor en los archivos | ¿Respaldada? |
 |---|---|---|
-| AP 0.43–0.52 vs 0.14 (23); prevalencia 0.138 (48) | AP 0.4264 / 0.4330 / 0.5153; 86/623 = 0.138042 | sí |
-| 86 `small`, 537 `large` (30) | `labels.csv` | sí |
-| 504 grupos, máximo 7 (31) | `grouping_report.json` | sí |
-| 4 / 236 / 383 (38, 118) | `mass_provenance.csv` | sí |
-| p < 0.001 frente a la línea base (68) | 0.000133, 0.000030, 0.000004 | sí |
-| ROC-AUC 0.77–0.80 (68) | 0.7694–0.7970 | sí |
-| p = 0.20–0.91 entre modelos (68) | 0.201358, 0.263822, 0.905695 | sí |
-| LR: recall 68 %, precisión 32 %; RF: recall 35 %, precisión 44 % (70) | 0.6841 / 0.3222; 0.3472 / 0.4353 | sí |
-| Accuracy 0.76–0.85 < 0.86 (70) | 0.7575–0.8468; línea base 0.862 | sí |
-| LR ROC-AUC 0.81 `unverifiable`, 0.68 `measured` (72) | 0.810821; 0.677464 | sí |
-| Sin masa, ROC-AUC 0.55–0.63; SVM 0.55 → 0.83 (72) | 0.5488–0.6292; 0.5488 → 0.8299 | sí |
-| 17 `small` en la sensibilidad (50, 72) | `metrics_sensitivity.json`: `n_small` 17 | sí |
-| AP 3–4× sobre el azar (115) | 3.09× – 3.73× | sí |
-| F1 de `small` 0.38–0.47 (118) | 0.3791–0.4711 | sí |
-| ρ = 0.250, df = 24 (75) | 0.250008; 24 | sí |
-| F1 original = 0.72, unos 17 `small` en la prueba (118) | 1f2e02f, celda 16: 0.718; soporte 17 | sí (pero sin cita, ver 3.5) |
+| Tablas entre marcadores (`metrics`, `comparisons`, `sensitivity` ×2) | — | sí, 0 discrepancias |
+| 623/623 por la regla R ≥ 2 R⊕ (23, 33, 44) | 623/623 | sí |
+| AP 0.43–0.52 vs 0.14 (23); 0.52/0.43/0.43 vs 0.138 (81) | 0.5153 / 0.4330 / 0.4264; 0.138039 | sí |
+| 521 `unique`, 102 sin pareja o ambiguas (30) | `lineage.csv`: 521; 83 + 19 | sí |
+| 237 masas coinciden (30) | `mass_matches_p1` = `true`: 237 | sí |
+| 284 radios coinciden (30) | no está en `data/processed/` | no comprobable (ver 3.5) |
+| `pl_bmassprov` para 521 filas (31) | `pscomppars_provenance_2026-10-13.csv`: 521 | sí |
+| 623 → 623 en `main`, 236 en sensibilidad (32, 53) | `predictions.csv` | sí |
+| 0.178000 / 0.178428 R_J; 86 / 537 (33) | `raw`; `labels.csv` | sí |
+| 504 grupos, máximo 7 (34) | `grouping_report.json` | sí |
+| **4 sobre la relación M-R** (45) | **3 `on_relation`**; 4 `derived` | **no** |
+| 4 / 236 / 383 (45) | `mass_provenance.csv` | sí |
+| p < 0.001 vs línea base (81, 128) | 0.000133 / 0.000030 / 0.000004 | sí |
+| ROC-AUC 0.77–0.80 (81) | 0.7694–0.7970 | sí |
+| p = 0.20–0.91 entre modelos (81) | 0.201358 / 0.263822 / 0.905695 | sí |
+| LR 68 % / 32 %; RF 35 % / 44 % (83) | 0.6841 / 0.3222; 0.3472 / 0.4353 | sí |
+| Accuracy 0.76–0.85 < 0.86 (83) | 0.7575–0.8468; 0.861961 | sí |
+| LR ROC-AUC 0.81 / 0.68 (85, 130) | 0.810821 / 0.677464 | sí |
+| Sin masa 0.55–0.63; SVM 0.55 → 0.83 (85) | 0.5488–0.6292; 0.5488 → 0.8299 | sí |
+| 17 `small` en la sensibilidad (63, 103) | `n_small` 17 | sí |
+| ρ = 0.250, df = 24 (62, 88) | 0.250008; 24 | sí |
+| 3–4× sobre el azar (128) | 3.09× – 3.73× | sí |
+| F1 de `small` 0.38–0.47 (132) | 0.3791–0.4711 | sí |
+| F1 = 0.72 original (132) | README de `main`, línea 92: 0.718 | sí |
 
-No hay ningún número, p-valor ni conteo del README que contradiga las salidas.
+Un conteo del README contradice `data/processed/`: la línea 45.
 
 ## Paso 5 — Hallazgos de `reports/ataque_v1.md`
 
-| Hallazgo | Severidad | ¿Atendido en el README de HEAD? |
+| Hallazgo | Severidad | ¿Atendido? |
 |---|---|---|
-| H1: sesgo de detección por tránsito (δ ≈ (Rp/R*)²) que confunde los parámetros estelares con el tamaño | mayor | **No.** No hay mención en `README.md:111-118`. La línea 115 presenta "small planets being more common around cool, low-mass stars" como tendencia conocida, que es justo lo que H1 atribuye a selección. No hay justificación registrada |
-| H2: muestra restringida a planetas con masa, prevalencia de `small` artificial (13.8 %) | mayor | **No.** "Limitations" (117) menciona el origen y la versión del catálogo, pero no el sesgo de selección por masa. No hay justificación registrada |
-| H3: sobreajuste de RF (AP de entrenamiento 1.0) | menor | No aplica: los hiperparámetros están congelados por el criterio 6 |
-| H4: ablación de `star_radius` en el SVM, formalmente anómala (ΔAP +0.009, p = 0.71) | menor | No. El README dice que el efecto "is tested by ablation" (39) y no da el resultado |
-| H5: explicación incompleta de la brecha de ROC-AUC 0.81/0.68 | menor | No |
-
-**Párrafo sin commit del árbol de trabajo** (no forma parte de la versión verificada). Atiende H1 y, en parte, H2: explica la profundidad de tránsito, el sesgo hacia estrellas pequeñas y la restricción a planetas con masa catalogada, con cautela ("to the extent that…", "cannot be measured here"). Si se hace commit, quedan dos cosas por resolver:
-
-1. Contradice `README.md:116`. El párrafo dice "the data do not record the discovery method", y la línea 116 afirma que las masas medidas vienen "mostly from radial-velocity follow-up".
-2. No resuelve la parte de H2 que toca el criterio 3, porque el filtrado hasta 623 filas sigue sin documentarse en el README.
-
-Nota menor: el mensaje de 760cc1f dice "2 menores", pero el reporte tiene 3 (H3, H4, H5).
+| H1: sesgo de detección por tránsito (δ ≈ (Rp/R*)²) | mayor | **Sí.** `README.md:129` explica el mecanismo, lo presenta como hipótesis, dice cómo se podría estimar (`discoverymethod` en las 521 filas emparejadas) y que no se hizo. `README.md:128` deja la tendencia astrofísica y la selección como explicaciones en competencia. Se quitó la afirmación de "known trends" de la versión anterior |
+| H2: muestra restringida a planetas con masa, prevalencia artificial | mayor | **Sí.** `README.md:129`: "restricted to planets with a catalogued mass, which shapes which planets are included" (las 623 filas tienen `mass`: 0 NaN). `README.md:29` declara desconocidos los filtros de origen, y el README no repite la cifra 5906 → 623 del red team, que tampoco está probada. Observación: no dice de forma explícita que la prevalencia de 0.138 sea propia de la muestra y no de la población. La frase de `760cc1f` que lo cubría ("the numbers should not be read as properties of the planet population") se quitó en la iteración 2 |
+| H3: sobreajuste de RF | menor | Mencionado en `README.md:131` (train AP = 1.0, reproducido) |
+| H4: ablación de `star_radius` en el SVM, formalmente anómala | menor | No se menciona. `README.md:49` da los ΔAP correctos, pero no dice que en el SVM el de `star_radius` (+0.0094) queda fuera del rango de las otras tres (−0.0241 a −0.0083) |
+| H5: brecha de ROC-AUC 0.81/0.68 | menor | Sí, `README.md:130`, citando H5 |
 
 ## Observaciones fuera de los criterios
 
-- **`df` sobrescrito.** En la celda `readme-tables` del notebook, `(df,) = {test["df"] for test in tests}` reemplaza el DataFrame `df` por el entero 24. Ninguna celda posterior usa `df` y las salidas no cambian, pero una celda nueva que lo use después de §10 fallaría sin aviso claro.
-- **Configuración de ruff.** `ruff.toml` del repo (desde a031544, 2026-09-30) selecciona solo E, F e I. Con `~/dotfiles/ruff.toml` (agrega UP, B, SIM y NPY) aparecen 14 avisos (12 B905, 2 SIM300). El criterio 11 se juzga con la configuración del repo, así que no afecta el veredicto.
-- **Efecto de la verificación en `data/processed/`.** Las ejecuciones de este rol reescribieron las 11 salidas con bytes idénticos (`git status` sin cambios en `data/processed/`).
+- Siguen sin cambios las dos observaciones de `aa9a472`: el `df` sobrescrito en la celda `readme-tables` y los 14 avisos con `~/dotfiles/ruff.toml` (el criterio 11 se juzga con el `ruff.toml` del repo).
+- `docs/bitacora.md`, última línea: "Horas: X h acumuladas", con un marcador sin llenar.
+- Las ejecuciones de este rol reescribieron las 11 salidas con bytes idénticos (`git status` sin cambios en `data/processed/`).
 
 ## Qué haría falta para CUMPLE
 
-Esto no es una propuesta de redacción: lo que se escriba es decisión de Mai (T8). Falta:
+No es una propuesta de redacción: lo que se escriba es decisión de Mai (T8/T9). Falta:
 
-- **Criterio 3.** Que el README registre la consulta o descarga con fecha y cada filtro con sus filas antes y después, o "desconocido" con lo que se intentó.
-- **Criterio 4.** Que el README dé, para cada una de las cinco variables, un veredicto en las categorías del brief, su razón y su evidencia de procedencia.
-- **Criterio 9.** Que las afirmaciones de 3.5 citen evidencia o se presenten como hipótesis, y que H1 y H2 queden atendidos o justificados.
+- **Criterio 9.** Corregir `README.md:45` para que el conteo coincida con `mass_provenance.csv`. Presentar `README.md:160` como hipótesis o alinearlo con `README.md:29-30`. Corregir las filas de autoría de `reports/` (`README.md:156-157`).
+- Antes de P2 conviene comprobar el "284 have the same radius" de `README.md:30` contra la descarga del Proyecto 1.

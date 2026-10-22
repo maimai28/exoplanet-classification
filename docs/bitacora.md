@@ -80,3 +80,4 @@ Aprobados los 4 puntos: CSV a data/raw/ con SHA-256, consulta T3 al NASA Exoplan
 - Se aprueban los 14 puntos de decisión. Ajuste al punto 14: T7 declara `scipy` explícitamente en `pyproject.toml`; el brief (Restricciones) lo admite junto a `pytest`.
 - Se corrige la RAM de la ThinkCentre en el brief (Restricciones): 23 GB útiles, no 8 GB.
 - Siguiente: T6 (Tester, fase A).
+- 2026-10-22 · T8 iteración 2 (por veredicto_v1: criterios 3, 4, 9; H1/H2). Horas: X h acumuladas.

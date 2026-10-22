@@ -27,7 +27,7 @@ This repository audits an earlier classification project. Every label in the ori
 <!-- T8 (Mai) -->
 
 - **File.** `data/raw/exoplanets_clean.csv`: 623 planets × 7 columns (`mass`, `radius`, `orbital_period`, `star_mass`, `star_radius`, `star_teff`, `planet_type`), added to the project on 2026-09-19 (commit `b316a47`) and stored unmodified with its SHA-256 (`data/raw/SHA256SUMS`). Its exact source and the filters that produced it are not documented.
-- **Lineage check (T1).** Rows were matched against a NASA Exoplanet Archive *PSCompPars* query downloaded on 2026-09-18 (6,366 rows; columns `pl_name, pl_bmassj, pl_rade, pl_orbper, discoverymethod, st_mass, st_rad, st_teff`). Matching rule: orbital period within a relative tolerance of 10⁻³ and at least 2 of the other 5 columns within 5 %. Result: 521 rows match a single planet; the other 102 are ambiguous or unmatched. Among the 521, only 284 have the same radius (within 1 %) and 237 the same mass. Our hypothesis is that the file was built from an older release of the table; this is not proven. Row-level results: `data/processed/lineage.csv`.
+- **Lineage check (T1).** Rows were matched against a NASA Exoplanet Archive *PSCompPars* query downloaded on 2026-09-18 (6,366 rows; columns `pl_name, pl_bmassj, pl_rade, pl_orbper, discoverymethod, st_mass, st_rad, st_teff`). Matching rule: orbital period within a relative tolerance of 10⁻³ and at least 2 of the other 5 columns within 5 %. Result: 521 rows match a single planet; the other 102 are ambiguous or unmatched. Among the 521, only 237 have the same mass (within 1 %) as that catalog. Our hypothesis is that the file was built from an older release of the table; this is not proven. Row-level results: `data/processed/lineage.csv`.
 - **Mass provenance (T3).** The Archive's `pl_bmassprov` flag was queried on 2026-10-13 for the 521 matched rows (`data/raw/pscomppars_provenance_2026-10-13.csv`).
 - **Filters in this analysis.** None: 623 rows in, 623 rows used by the main run. The exploratory sensitivity run uses the 236 rows with a measured mass (see below).
 - **Label.** `radius` is in Jupiter radii. All 623 labels are reproduced by R ≥ 0.1784 R_J (= 2 R⊕): the largest "terrestrial" planet has R = 0.178000 R_J and the smallest "gas giant" 0.178428 R_J. We therefore treat the label as a radius threshold; the code that generated it is not available. The original names describe composition, which the data do not contain; classes are renamed `small` (R < 2 R⊕, 86 rows) and `large` (537 rows). The 2 R⊕ boundary lies near the upper edge of the radius valley (Fulton et al. 2017, AJ 154, 109).
@@ -42,7 +42,7 @@ Verdict categories follow the project brief: **leak** (the variable encodes the 
 | Variable | Verdict | Reason | Evidence |
 |---|---|---|---|
 | `radius` | leak | The label is reproduced by a threshold on it (623/623). | T1; a test checks that `radius` never enters the model |
-| `mass` | uncertain | 4 masses lie on the Chen & Kipping (2017) mass–radius relation used by the Archive (derived from radius), 236 are measured, 383 cannot be checked against the current catalog. | `data/processed/mass_provenance.csv` (T3b) |
+| `mass` | uncertain | 4 masses are classed as derived from radius: 3 lie on the Chen & Kipping (2017) mass–radius relation used by the Archive, and 1 is flagged by the Archive as computed from that relation and matches the reference catalog, 236 are measured, 383 cannot be checked against the current catalog. | `data/processed/mass_provenance.csv` (T3b) |
 | `orbital_period` | no leak | Measured from the timing of transits or radial-velocity signals; it does not use the planet's radius. | Agrees with the reference catalog within 10⁻³ for the 521 matched rows (T1) |
 | `star_mass` | no leak | Stellar parameter; it does not use the planet's radius. | Catalog column `st_mass` (T1) |
 | `star_teff` | no leak | Stellar parameter; it does not use the planet's radius. | Catalog column `st_teff` (T1) |
@@ -153,11 +153,11 @@ Model and date of each agent task: the model recorded in the Claude Code session
 | README: opening paragraph, Reproduce, section layout, main results table, Files (T7) | agente: Claude Code, rol Implementador, claude-opus-5-5, 2026-10-18 | 93fc459 |
 | README: Question and label, Data and lineage, Leakage verdicts, Method, interpretation of the results, Discussion (T8) | Mai (texto editado y aprobado por Mai a partir de un borrador de Claude, 2026-10-21) | f2cc43a |
 | README: comparison and sensitivity tables, Authorship layout (T9; assignments by Mai) | agente: Claude Code, rol Implementador, claude-opus-5-5, 2026-10-21 | 922540b, `docs/decisiones.md` (T9) |
-| `reports/ataque_v1.md` (T10) | T10: agent: Gemini (Antigravity CLI), role Red team, 2026-10-21; T11: agent: Claude Code, role Verifier, claude-opus-5-5, 2026-10-21 | — |
-| `reports/veredicto_v1.md` (T11) | pendiente | — |
+| `reports/ataque_v1.md` (T10) | agent: Gemini (Antigravity CLI), role Red team, 2026-10-21 | — |
+| `reports/veredicto_v1.md` (T11) | agent: Claude Code, role Verifier, claude-opus-5-5, 2026-10-21 and 2026-10-22 | — |
 
 - **AI assistance**, under a documented role-based workflow: Claude Code (Anthropic) for planning, tests, implementation and verification; Gemini (Antigravity CLI) as red team; ChatGPT for brief critique. Agent outputs were reviewed and accepted by Mai (GitHub @maimai28); all decisions are recorded in `docs/decisiones.md`.
-- **Data:** NASA Exoplanet Archive, *PSCompPars* (older release). Mass–radius relation: Chen & Kipping (2017).
+- **Data:** origin undocumented; values partially match the NASA Exoplanet Archive *PSCompPars* table (see Data and lineage). Mass–radius relation: Chen & Kipping (2017).
 
 ## Files
 

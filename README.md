@@ -71,6 +71,43 @@ At the default threshold the models trade precision for recall differently: Logi
 
 The signal is not uniform across the sample. Slicing the same out-of-fold predictions by mass provenance, Logistic Regression reaches ROC-AUC 0.81 on the 383 unverifiable rows but only 0.68 on the 236 measured rows. On the measured subset alone (exploratory, 17 small planets), models retrained without mass reach ROC-AUC 0.55–0.63; adding mass raises it substantially (SVM: 0.55 → 0.83), as expected from the physical mass–radius relation.
 
+<!-- comparisons:start -->
+Nadeau–Bengio corrected resampled t-test on `average_precision_small`, from `data/processed/comparisons.json` (df = 24, ρ = `test_train_ratio` = 0.250); two-sided p-values as written in the file.
+
+Run `main`:
+
+| Pair (A vs B) | `mean_diff` (A − B) | `t` | `df` | `p_value` |
+|---|---|---|---|---|
+| Logistic Regression vs Random Forest | 0.082 | 1.144 | 24 | 0.263822 |
+| Logistic Regression vs SVM (RBF) | 0.089 | 1.314 | 24 | 0.201358 |
+| Logistic Regression vs Baseline (prior) | 0.377 | 4.542 | 24 | 0.000133 |
+| Random Forest vs SVM (RBF) | 0.007 | 0.120 | 24 | 0.905695 |
+| Random Forest vs Baseline (prior) | 0.295 | 5.134 | 24 | 0.000030 |
+| SVM (RBF) vs Baseline (prior) | 0.288 | 5.924 | 24 | 0.000004 |
+<!-- comparisons:end -->
+
+<!-- sensitivity:start -->
+Sensitivity runs on the 236 rows with `mass_provenance == measured` (17 `small`), mean ± std (ddof = 1) over the 25 evaluations, from `data/processed/metrics_sensitivity.json`. Exploratory (`n_small` < 25): no significance test.
+
+Without mass (`sens_without_mass`, features `main`):
+
+| Model | `accuracy` | `average_precision_small` | `balanced_accuracy` | `f1_small` | `precision_small` | `recall_small` | `roc_auc` |
+|---|---|---|---|---|---|---|---|
+| Logistic Regression | 0.691 ± 0.045 | 0.192 ± 0.144 | 0.594 ± 0.180 | 0.169 ± 0.123 | 0.104 ± 0.074 | 0.480 ± 0.376 | 0.629 ± 0.144 |
+| Random Forest | 0.899 ± 0.026 | 0.213 ± 0.162 | 0.538 ± 0.102 | 0.118 ± 0.204 | 0.131 ± 0.230 | 0.117 ± 0.204 | 0.588 ± 0.184 |
+| SVM (RBF) | 0.661 ± 0.093 | 0.134 ± 0.103 | 0.520 ± 0.134 | 0.111 ± 0.101 | 0.067 ± 0.063 | 0.353 ± 0.334 | 0.549 ± 0.117 |
+| Baseline (prior) | 0.928 ± 0.010 | 0.072 ± 0.010 | 0.500 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 | 0.500 ± 0.000 |
+
+With mass (`sens_with_mass`, features `sensitivity_mass`):
+
+| Model | `accuracy` | `average_precision_small` | `balanced_accuracy` | `f1_small` | `precision_small` | `recall_small` | `roc_auc` |
+|---|---|---|---|---|---|---|---|
+| Logistic Regression | 0.781 ± 0.050 | 0.369 ± 0.166 | 0.829 ± 0.087 | 0.368 ± 0.070 | 0.235 ± 0.048 | 0.883 ± 0.185 | 0.870 ± 0.074 |
+| Random Forest | 0.947 ± 0.035 | 0.689 ± 0.252 | 0.824 ± 0.169 | 0.619 ± 0.282 | 0.614 ± 0.299 | 0.680 ± 0.339 | 0.960 ± 0.039 |
+| SVM (RBF) | 0.740 ± 0.065 | 0.340 ± 0.123 | 0.770 ± 0.098 | 0.311 ± 0.079 | 0.198 ± 0.062 | 0.803 ± 0.207 | 0.830 ± 0.083 |
+| Baseline (prior) | 0.928 ± 0.010 | 0.072 ± 0.010 | 0.500 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 | 0.500 ± 0.000 |
+<!-- sensitivity:end -->
+
 ## Discussion
 
 <!-- T8 (Mai) -->
@@ -83,6 +120,10 @@ The signal is not uniform across the sample. Slicing the same out-of-fold predic
 ## Authorship
 
 <!-- T9 -->
+
+- **Author:** Mai (GitHub [@maimai28](https://github.com/maimai28)). Defined the question, made every analysis decision (label, leakage verdicts, evaluation scheme), wrote the interpretation and accepted the results.
+- **AI assistance**, under a documented role-based workflow: Claude Code (Anthropic) for planning, tests, implementation and verification; Gemini (Antigravity CLI) as red team; ChatGPT for brief critique. Agent outputs were reviewed and accepted by the author; all decisions are recorded in `docs/decisiones.md`.
+- **Data:** NASA Exoplanet Archive, *PSCompPars* (older release). Mass–radius relation: Chen & Kipping (2017).
 
 ## Files
 

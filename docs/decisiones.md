@@ -615,3 +615,11 @@ Rama `exp/2026-09-30-auditoria`, sobre `pruebas-1`. No se tocó `tests/`, `data/
 - Las figuras existentes (distribución de clases, matrices de confusión, comparación de modelos) se rehicieron con las predicciones fuera de fold de `main`, repetición 0. No se agregaron figuras.
 - El notebook se guarda con las salidas de la ejecución del comando del contrato, como en `main`, sin los metadatos de tiempo por celda.
 - README (decisión de Mai, 2026-10-18): se quitó la prosa de `main` que ya no aplica (split 80/20, tabla y clases viejas, instalación con `pip`). Quedan los encabezados vacíos para T8/T9, la sección "Reproduce" con `uv sync --locked` y el comando del contrato, y la tabla entre los marcadores, copiada de la salida del notebook (`results_table`, sección 9).
+
+## T9 — Partes mecánicas del README (Implementador, 2026-10-21)
+
+- **Tablas de `comparisons.json` y `metrics_sensitivity.json`:** las genera una celda nueva del notebook (`readme-tables`, sección 10), que lee los dos archivos tal como quedaron en disco y los imprime en Markdown entre los marcadores `<!-- comparisons:start/end -->` y `<!-- sensitivity:start/end -->`. Ese bloque se pegó sin editar en el README, después de la interpretación de T8 y antes de "Discussion". Pares en el orden del contrato; `mean_diff` y `t` a 3 decimales, `p_value` a 6 (como en el archivo); la sensibilidad usa la misma `results_table` que la tabla principal.
+- La celda solo imprime: las 11 salidas del contrato no cambian. Comprobado con `sha256sum` de `data/processed/` antes, tras la ejecución 1 y tras la 2: idénticas.
+- El notebook se guardó con las salidas de la ejecución 2, sin metadatos de tiempo. Cambian solo los `execution_count` posteriores, los ids aleatorios del `Styler` de la sección 13 y la versión de Python en los metadatos (3.14.4 → 3.14.7, la del entorno actual).
+- **Autoría:** el texto de Mai, solo con formato Markdown. `<Mai>` se escribió como `Mai`: entre corchetes angulares GitHub lo toma como etiqueta HTML y no lo muestra.
+- `uv run pytest -q`: 91 pasan. `uvx ruff check .`: limpio.

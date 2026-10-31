@@ -1,0 +1,11 @@
+{
+  "hostname_collisions": 1,
+  "max_group_size": 7,
+  "n_fallback_rows_joined": 13,
+  "n_groups": 504,
+  "n_groups_multi_hostname": 4,
+  "n_rows": 623,
+  "n_rows_with_hostname": 521,
+  "n_rows_without_hostname": 102,
+  "tuple_collisions": 4
+}

@@ -1,0 +1,624 @@
+row_id,pl_name,hostname,match_status
+0,,,none
+1,,,none
+2,,,none
+3,,,ambiguous
+4,55 Cnc e,55 Cnc,unique
+5,Kepler-1116 b,Kepler-1116,unique
+6,,,none
+7,,,none
+8,CoRoT-1 b,CoRoT-1,unique
+9,CoRoT-10 b,CoRoT-10,unique
+10,CoRoT-11 b,CoRoT-11,unique
+11,CoRoT-12 b,CoRoT-12,unique
+12,CoRoT-13 b,CoRoT-13,unique
+13,CoRoT-14 b,CoRoT-14,unique
+14,CoRoT-16 b,CoRoT-16,unique
+15,CoRoT-17 b,CoRoT-17,unique
+16,CoRoT-18 b,CoRoT-18,unique
+17,CoRoT-19 b,CoRoT-19,unique
+18,CoRoT-2 b,CoRoT-2,unique
+19,CoRoT-20 b,CoRoT-20,unique
+20,CoRoT-21 b,CoRoT-21,unique
+21,CoRoT-22 b,CoRoT-22,unique
+22,CoRoT-23 b,CoRoT-23,unique
+23,CoRoT-24 b,CoRoT-24,unique
+24,CoRoT-24 c,CoRoT-24,unique
+25,CoRoT-25 b,CoRoT-25,unique
+26,CoRoT-26 b,CoRoT-26,unique
+27,CoRoT-27 b,CoRoT-27,unique
+28,CoRoT-28 b,CoRoT-28,unique
+29,CoRoT-29 b,CoRoT-29,unique
+30,CoRoT-3 b,CoRoT-3,unique
+31,CoRoT-30 b,CoRoT-30,unique
+32,CoRoT-31 b,CoRoT-31,unique
+33,CoRoT-32 b,CoRoT-32,unique
+34,,,none
+35,CoRoT-4 b,CoRoT-4,unique
+36,CoRoT-5 b,CoRoT-5,unique
+37,CoRoT-6 b,CoRoT-6,unique
+38,CoRoT-7 b,CoRoT-7,unique
+39,CoRoT-8 b,CoRoT-8,unique
+40,CoRoT-9 b,CoRoT-9,unique
+41,K2-44 b,K2-44,unique
+42,K2-22 b,K2-22,unique
+43,K2-111 b,K2-111,unique
+44,,,none
+45,K2-114 b,K2-114,unique
+46,,,none
+47,K2-107 b,K2-107,unique
+48,,,none
+49,K2-113 b,K2-113,unique
+50,Kepler-677 b,Kepler-677,unique
+51,K2-132 b,K2-132,unique
+52,K2-141 b,K2-141,unique
+53,GJ 1132 b,GJ 1132,unique
+54,GJ 1214 b,GJ 1214,unique
+55,GJ 3470 b,GJ 3470,unique
+56,GJ 436 b,GJ 436,unique
+57,,,none
+58,,,none
+59,HD 101581 c,HIP 56998,unique
+60,HATS-36 b,HATS-36,unique
+61,HAT-P-1 b,HAT-P-1,unique
+62,HAT-P-11 b,HAT-P-11,unique
+63,HAT-P-12 b,HAT-P-12,unique
+64,HAT-P-13 b,HAT-P-13,unique
+65,,,none
+66,HAT-P-15 b,HAT-P-15,unique
+67,HAT-P-16 b,HAT-P-16,unique
+68,HAT-P-17 b,HAT-P-17,unique
+69,HAT-P-18 b,HAT-P-18,unique
+70,HAT-P-19 b,HAT-P-19,unique
+71,HAT-P-2 b,HAT-P-2,unique
+72,HAT-P-20 b,HAT-P-20,unique
+73,,,ambiguous
+74,Kepler-1772 b,Kepler-1772,unique
+75,HAT-P-23 b,HAT-P-23,unique
+76,HAT-P-24 b,HAT-P-24,unique
+77,HAT-P-25 b,HAT-P-25,unique
+78,,,none
+79,HAT-P-27 b,HAT-P-27,unique
+80,HAT-P-28 b,HAT-P-28,unique
+81,,,none
+82,,,none
+83,HAT-P-30 b,HAT-P-30,unique
+84,HAT-P-31 b,HAT-P-31,unique
+85,HAT-P-32 b,HAT-P-32,unique
+86,HAT-P-33 b,HAT-P-33,unique
+87,HAT-P-34 b,HAT-P-34,unique
+88,HAT-P-35 b,HAT-P-35,unique
+89,HAT-P-36 b,HAT-P-36,unique
+90,HAT-P-37 b,HAT-P-37,unique
+91,HAT-P-38 b,HAT-P-38,unique
+92,HAT-P-39 b,HAT-P-39,unique
+93,HAT-P-4 b,HAT-P-4,unique
+94,,,none
+95,,,none
+96,HAT-P-42 b,HAT-P-42,unique
+97,HAT-P-43 b,HAT-P-43,unique
+98,HAT-P-44 b,HAT-P-44,unique
+99,HAT-P-45 b,HAT-P-45,unique
+100,HAT-P-46 b,HAT-P-46,unique
+101,HAT-P-47 b,HAT-P-47,unique
+102,,,ambiguous
+103,,,none
+104,,,ambiguous
+105,HAT-P-50 b,HAT-P-50,unique
+106,HAT-P-51 b,HAT-P-51,unique
+107,HAT-P-52 b,HAT-P-52,unique
+108,HAT-P-53 b,HAT-P-53,unique
+109,HAT-P-54 b,HAT-P-54,unique
+110,HAT-P-55 b,HAT-P-55,unique
+111,HAT-P-56 b,HAT-P-56,unique
+112,,,none
+113,,,none
+114,,,none
+115,HAT-P-66 b,HAT-P-66,unique
+116,HAT-P-67 b,HAT-P-67,unique
+117,HAT-P-7 b,HAT-P-7,unique
+118,HAT-P-8 b,HAT-P-8,unique
+119,HAT-P-9 b,HAT-P-9,unique
+120,HATS-1 b,HATS-1,unique
+121,HATS-10 b,HATS-10,unique
+122,Kepler-501 c,Kepler-501,unique
+123,,,ambiguous
+124,HATS-13 b,HATS-13,unique
+125,HATS-14 b,HATS-14,unique
+126,HATS-15 b,HATS-15,unique
+127,HATS-16 b,HATS-16,unique
+128,HATS-17 b,HATS-17,unique
+129,HATS-18 b,HATS-18,unique
+130,,,none
+131,HATS-2 b,HATS-2,unique
+132,,,ambiguous
+133,TOI-2842 b,TOI-2842,unique
+134,HATS-22 b,HATS-22,unique
+135,HATS-23 b,HATS-23,unique
+136,HATS-24 b,HATS-24,unique
+137,,,ambiguous
+138,HATS-26 b,HATS-26,unique
+139,HATS-27 b,HATS-27,unique
+140,HATS-28 b,HATS-28,unique
+141,HATS-29 b,HATS-29,unique
+142,HATS-3 b,HATS-3,unique
+143,HATS-30 b,HATS-30,unique
+144,HATS-31 b,HATS-31,unique
+145,HATS-32 b,HATS-32,unique
+146,HATS-33 b,HATS-33,unique
+147,HATS-34 b,HATS-34,unique
+148,HATS-35 b,HATS-35,unique
+149,HATS-4 b,HATS-4,unique
+150,HATS-43 b,HATS-43,unique
+151,HATS-44 b,HATS-44,unique
+152,HATS-45 b,HATS-45,unique
+153,HATS-46 b,HATS-46,unique
+154,HATS-5 b,HATS-5,unique
+155,HATS-50 b,HATS-50,unique
+156,HATS-51 b,HATS-51,unique
+157,HATS-52 b,HATS-52,unique
+158,HATS-53 b,HATS-53,unique
+159,HATS-6 b,HATS-6,unique
+160,HATS-7 b,HATS-7,unique
+161,HATS-8 b,HATS-8,unique
+162,HATS-9 b,HATS-9,unique
+163,HD 106315 b,HD 106315,unique
+164,HD 106315 c,HD 106315,unique
+165,HD 149026 b,HD 149026,unique
+166,HD 17156 b,HD 17156,unique
+167,HD 179949 b,HD 179949,unique
+168,HD 189733 b,HD 189733,unique
+169,HD 209458 b,HD 209458,unique
+170,,,none
+171,HD 46375 b,HD 46375,unique
+172,,,ambiguous
+173,HD 75289 b,HD 75289,unique
+174,HD 76700 b,HD 76700,unique
+175,HD 7924 b,HD 7924,unique
+176,,,none
+177,HD 83443 b,HD 83443,unique
+178,,,none
+179,,,none
+180,HD 97658 b,HD 97658,unique
+181,,,none
+182,K2-10 b,K2-10,unique
+183,K2-215 b,K2-215,unique
+184,EPIC 220674823 b,EPIC 220674823,unique
+185,EPIC 220674823 c,EPIC 220674823,unique
+186,K2-108 b,K2-108,unique
+187,K2-110 b,K2-110,unique
+188,,,none
+189,K2-139 b,K2-139,unique
+190,K2-18 b,K2-18,unique
+191,K2-19 b,K2-19,unique
+192,K2-19 c,K2-19,unique
+193,K2-24 b,K2-24,unique
+194,K2-24 c,K2-24,unique
+195,K2-27 b,K2-27,unique
+196,K2-3 b,K2-3,unique
+197,K2-3 c,K2-3,unique
+198,K2-3 d,K2-3,unique
+199,Kepler-1631 b,Kepler-1631,unique
+200,K2-31 b,K2-31,unique
+201,K2-32 b,K2-32,unique
+202,K2-32 c,K2-32,unique
+203,K2-32 d,K2-32,unique
+204,K2-33 b,K2-33,unique
+205,K2-34 b,K2-34,unique
+206,,,none
+207,K2-60 b,K2-60,unique
+208,K2-66 b,K2-66,unique
+209,K2-77 b,K2-77,unique
+210,K2-95 b,K2-95,unique
+211,,,none
+212,KELT-1 b,KELT-1,unique
+213,KELT-10 b,KELT-10,unique
+214,KELT-11 b,KELT-11,unique
+215,,,none
+216,KELT-16 b,KELT-16,unique
+217,KELT-17 b,KELT-17,unique
+218,KELT-18 b,KELT-18,unique
+219,KELT-19 A b,KELT-19 A,unique
+220,KELT-2 A b,KELT-2 A,unique
+221,KELT-20 b,KELT-20,unique
+222,KELT-21 b,KELT-21,unique
+223,,,none
+224,KELT-4 A b,KELT-4 A,unique
+225,,,none
+226,KELT-7 b,KELT-7,unique
+227,,,ambiguous
+228,,,none
+229,,,ambiguous
+230,KOI-1843.03,Kepler-974,unique
+231,Kepler-425 b,Kepler-425,unique
+232,Kepler-427 b,Kepler-427,unique
+233,Kepler-426 b,Kepler-426,unique
+234,,,none
+235,,,none
+236,Kepler-51 d,Kepler-51,unique
+237,Kepler-428 b,Kepler-428,unique
+238,Kepler-10 b,Kepler-10,unique
+239,Kepler-10 c,Kepler-10,unique
+240,Kepler-100 b,Kepler-100,unique
+241,Kepler-100 c,Kepler-100,unique
+242,Kepler-100 d,Kepler-100,unique
+243,Kepler-102 b,Kepler-102,unique
+244,Kepler-102 c,Kepler-102,unique
+245,Kepler-102 d,Kepler-102,unique
+246,Kepler-102 e,Kepler-102,unique
+247,Kepler-102 f,Kepler-102,unique
+248,Kepler-103 b,Kepler-103,unique
+249,Kepler-103 c,Kepler-103,unique
+250,,,none
+251,Kepler-106 b,Kepler-106,unique
+252,Kepler-106 c,Kepler-106,unique
+253,Kepler-106 d,Kepler-106,unique
+254,Kepler-106 e,Kepler-106,unique
+255,Kepler-109 b,Kepler-109,unique
+256,Kepler-109 c,Kepler-109,unique
+257,Kepler-11 b,Kepler-11,unique
+258,Kepler-11 c,Kepler-11,unique
+259,Kepler-11 d,Kepler-11,unique
+260,Kepler-11 e,Kepler-11,unique
+261,Kepler-11 f,Kepler-11,unique
+262,Kepler-11 g,Kepler-11,unique
+263,Kepler-113 b,Kepler-113,unique
+264,Kepler-113 c,Kepler-113,unique
+265,K2-121 b,K2-121,unique
+266,Kepler-114 c,Kepler-114,unique
+267,Kepler-114 d,Kepler-114,unique
+268,Kepler-12 b,Kepler-12,unique
+269,,,none
+270,Kepler-128 c,Kepler-128,unique
+271,,,none
+272,Kepler-131 b,Kepler-131,unique
+273,Kepler-131 c,Kepler-131,unique
+274,Kepler-138 b,Kepler-138,unique
+275,Kepler-138 c,Kepler-138,unique
+276,Kepler-138 d,Kepler-138,unique
+277,Kepler-14 b,Kepler-14,unique
+278,Kepler-145 b,Kepler-145,unique
+279,,,ambiguous
+280,Kepler-15 b,Kepler-15,unique
+281,Kepler-16 b,Kepler-16,unique
+282,Kepler-1625 b,Kepler-1625,unique
+283,Kepler-1647 b,Kepler-1647,unique
+284,Kepler-167 d,Kepler-167,unique
+285,Kepler-167 e,Kepler-167,unique
+286,Kepler-17 b,Kepler-17,unique
+287,Kepler-529 d,Kepler-529,unique
+288,Kepler-177 c,Kepler-177,unique
+289,Kepler-18 b,Kepler-18,unique
+290,Kepler-18 c,Kepler-18,unique
+291,Kepler-18 d,Kepler-18,unique
+292,Kepler-19 b,Kepler-19,unique
+293,Kepler-20 b,Kepler-20,unique
+294,Kepler-20 c,Kepler-20,unique
+295,Kepler-20 d,Kepler-20,unique
+296,Kepler-20 e,Kepler-20,unique
+297,Kepler-20 f,Kepler-20,unique
+298,Kepler-21 b,Kepler-21,unique
+299,,,none
+300,Kepler-23 b,Kepler-23,unique
+301,Kepler-23 c,Kepler-23,unique
+302,Kepler-23 d,Kepler-23,unique
+303,Kepler-238 e,Kepler-238,unique
+304,Kepler-238 f,Kepler-238,unique
+305,Kepler-24 b,Kepler-24,unique
+306,Kepler-24 c,Kepler-24,unique
+307,Kepler-25 b,Kepler-25,unique
+308,Kepler-25 c,Kepler-25,unique
+309,Kepler-1388 b,Kepler-1388,unique
+310,Kepler-26 c,Kepler-26,unique
+311,Kepler-27 b,Kepler-27,unique
+312,Kepler-27 c,Kepler-27,unique
+313,Kepler-276 c,Kepler-276,unique
+314,Kepler-276 d,Kepler-276,unique
+315,Kepler-277 b,Kepler-277,unique
+316,Kepler-277 c,Kepler-277,unique
+317,Kepler-279 c,Kepler-279,unique
+318,Kepler-279 d,Kepler-279,unique
+319,,,none
+320,,,none
+321,Kepler-282 d,Kepler-282,unique
+322,Kepler-282 e,Kepler-282,unique
+323,Kepler-289 b,Kepler-289,unique
+324,Kepler-289 d,Kepler-289,unique
+325,Kepler-289 c,Kepler-289,unique
+326,,,none
+327,,,none
+328,Kepler-30 b,Kepler-30,unique
+329,Kepler-30 c,Kepler-30,unique
+330,Kepler-30 d,Kepler-30,unique
+331,Kepler-305 b,Kepler-305,unique
+332,Kepler-305 c,Kepler-305,unique
+333,,,ambiguous
+334,Kepler-307 c,Kepler-307,unique
+335,Kepler-31 c,Kepler-31,unique
+336,Kepler-32 b,Kepler-32,unique
+337,Kepler-32 c,Kepler-32,unique
+338,Kepler-20 g,Kepler-20,unique
+339,,,none
+340,Kepler-338 b,Kepler-338,unique
+341,Kepler-338 e,Kepler-338,unique
+342,Kepler-34 b,Kepler-34,unique
+343,Kepler-35 b,Kepler-35,unique
+344,Kepler-350 c,Kepler-350,unique
+345,Kepler-350 d,Kepler-350,unique
+346,,,none
+347,,,ambiguous
+348,Kepler-37 b,Kepler-37,unique
+349,Kepler-37 c,Kepler-37,unique
+350,Kepler-37 d,Kepler-37,unique
+351,Kepler-38 b,Kepler-38,unique
+352,Kepler-39 b,Kepler-39,unique
+353,Kepler-396 b,Kepler-396,unique
+354,Kepler-396 c,Kepler-396,unique
+355,Kepler-4 b,Kepler-4,unique
+356,Kepler-40 b,Kepler-40,unique
+357,Kepler-406 b,Kepler-406,unique
+358,Kepler-406 c,Kepler-406,unique
+359,,,none
+360,Kepler-409 b,Kepler-409,unique
+361,,,none
+362,Kepler-412 b,Kepler-412,unique
+363,Kepler-413 b,Kepler-413,unique
+364,Kepler-418 b,Kepler-418,unique
+365,Kepler-419 b,Kepler-419,unique
+366,Kepler-42 b,Kepler-42,unique
+367,Kepler-42 c,Kepler-42,unique
+368,,,none
+369,KOI-1257 b,KOI-1257,unique
+370,Kepler-422 b,Kepler-422,unique
+371,Kepler-423 b,Kepler-423,unique
+372,Kepler-424 b,Kepler-424,unique
+373,Kepler-43 b,Kepler-43,unique
+374,Kepler-432 b,Kepler-432,unique
+375,Kepler-433 b,Kepler-433,unique
+376,Kepler-434 b,Kepler-434,unique
+377,Kepler-435 b,Kepler-435,unique
+378,,,ambiguous
+379,Kepler-445 b,Kepler-445,unique
+380,Kepler-445 c,Kepler-445,unique
+381,Kepler-445 d,Kepler-445,unique
+382,Kepler-446 b,Kepler-446,unique
+383,Kepler-446 c,Kepler-446,unique
+384,Kepler-446 d,Kepler-446,unique
+385,Kepler-447 b,Kepler-447,unique
+386,KOI-12 b,KOI-12,unique
+387,Kepler-45 b,Kepler-45,unique
+388,Kepler-453 b,Kepler-453,unique
+389,Kepler-454 b,Kepler-454,unique
+390,Kepler-46 b,Kepler-46,unique
+391,Kepler-48 b,Kepler-48,unique
+392,Kepler-48 c,Kepler-48,unique
+393,Kepler-48 d,Kepler-48,unique
+394,Kepler-5 b,Kepler-5,unique
+395,Kepler-50 b,Kepler-50,unique
+396,Kepler-50 c,Kepler-50,unique
+397,Kepler-51 b,Kepler-51,unique
+398,Kepler-51 c,Kepler-51,unique
+399,Kepler-52 b,Kepler-52,unique
+400,Kepler-52 c,Kepler-52,unique
+401,Kepler-53 b,Kepler-53,unique
+402,Kepler-53 c,Kepler-53,unique
+403,Kepler-539 b,Kepler-539,unique
+404,Kepler-56 b,Kepler-56,unique
+405,Kepler-56 c,Kepler-56,unique
+406,Kepler-1254 d,Kepler-1254,unique
+407,Kepler-57 c,Kepler-57,unique
+408,Kepler-58 b,Kepler-58,unique
+409,Kepler-58 c,Kepler-58,unique
+410,Kepler-59 b,Kepler-59,unique
+411,Kepler-59 c,Kepler-59,unique
+412,Kepler-6 b,Kepler-6,unique
+413,Kepler-60 b,Kepler-60,unique
+414,Kepler-60 c,Kepler-60,unique
+415,Kepler-60 d,Kepler-60,unique
+416,Kepler-62 b,Kepler-62,unique
+417,Kepler-62 c,Kepler-62,unique
+418,Kepler-62 d,Kepler-62,unique
+419,Kepler-62 e,Kepler-62,unique
+420,Kepler-62 f,Kepler-62,unique
+421,Kepler-65 c,Kepler-65,unique
+422,Kepler-66 b,Kepler-66,unique
+423,Kepler-67 b,Kepler-67,unique
+424,Kepler-68 b,Kepler-68,unique
+425,,,ambiguous
+426,Kepler-7 b,Kepler-7,unique
+427,KOI-55 b,KOI-55,unique
+428,KOI-55 c,KOI-55,unique
+429,,,none
+430,Kepler-75 b,Kepler-75,unique
+431,Kepler-76 b,Kepler-76,unique
+432,Kepler-77 b,Kepler-77,unique
+433,Kepler-78 b,Kepler-78,unique
+434,Kepler-79 b,Kepler-79,unique
+435,Kepler-79 c,Kepler-79,unique
+436,Kepler-79 d,Kepler-79,unique
+437,Kepler-79 e,Kepler-79,unique
+438,Kepler-8 b,Kepler-8,unique
+439,Kepler-85 b,Kepler-85,unique
+440,Kepler-85 c,Kepler-85,unique
+441,Kepler-87 b,Kepler-87,unique
+442,,,none
+443,,,none
+444,KOI-94 b,KOI-94,unique
+445,KOI-94 c,KOI-94,unique
+446,KOI-94 d,KOI-94,unique
+447,,,ambiguous
+448,Kepler-9 b,Kepler-9,unique
+449,,,none
+450,,,none
+451,Kepler-91 b,Kepler-91,unique
+452,Kepler-92 b,Kepler-92,unique
+453,Kepler-92 c,Kepler-92,unique
+454,Kepler-93 b,Kepler-93,unique
+455,Kepler-94 b,Kepler-94,unique
+456,Kepler-95 b,Kepler-95,unique
+457,Kepler-96 b,Kepler-96,unique
+458,,,none
+459,K2-133 b,K2-133,unique
+460,K2-133 c,K2-133,unique
+461,K2-133 d,K2-133,unique
+462,MASCARA-1 b,MASCARA-1,unique
+463,NGTS-1 b,NGTS-1,unique
+464,,,none
+465,OGLE-TR-10 b,OGLE-TR-10,unique
+466,OGLE-TR-111 b,OGLE-TR-111,unique
+467,OGLE-TR-113 b,OGLE-TR-113,unique
+468,OGLE-TR-132 b,OGLE-TR-132,unique
+469,OGLE-TR-182 b,OGLE-TR-182,unique
+470,OGLE-TR-211 b,OGLE-TR-211,unique
+471,OGLE2-TR-L9 b,OGLE2-TR-L9,unique
+472,Qatar-1 b,Qatar-1,unique
+473,Qatar-2 b,Qatar-2,unique
+474,Qatar-3 b,Qatar-3,unique
+475,Qatar-4 b,Qatar-4,unique
+476,Qatar-5 b,Qatar-5,unique
+477,Qatar-6 b,Qatar-6,unique
+478,TRAPPIST-1 b,TRAPPIST-1,unique
+479,TRAPPIST-1 c,TRAPPIST-1,unique
+480,TRAPPIST-1 d,TRAPPIST-1,unique
+481,TRAPPIST-1 e,TRAPPIST-1,unique
+482,TRAPPIST-1 f,TRAPPIST-1,unique
+483,TRAPPIST-1 g,TRAPPIST-1,unique
+484,,,none
+485,TrES-3 b,TrES-3,unique
+486,,,none
+487,TrES-5 b,TrES-5,unique
+488,WASP-1 b,WASP-1,unique
+489,WASP-10 b,WASP-10,unique
+490,,,none
+491,WASP-101 b,WASP-101,unique
+492,WASP-102 b,WASP-102,unique
+493,WASP-103 b,WASP-103,unique
+494,WASP-104 b,WASP-104,unique
+495,WASP-105 b,WASP-105,unique
+496,WASP-106 b,WASP-106,unique
+497,WASP-107 b,WASP-107,unique
+498,,,none
+499,,,none
+500,Kepler-1759 b,Kepler-1759,unique
+501,WASP-110 b,WASP-110,unique
+502,,,none
+503,,,none
+504,WASP-113 b,WASP-113,unique
+505,WASP-114 b,WASP-114,unique
+506,WASP-117 b,WASP-117,unique
+507,WASP-118 b,WASP-118,unique
+508,WASP-119 b,WASP-119,unique
+509,WASP-12 b,WASP-12,unique
+510,WASP-120 b,WASP-120,unique
+511,WASP-121 b,WASP-121,unique
+512,KELT-14 b,KELT-14,unique
+513,WASP-123 b,WASP-123,unique
+514,WASP-124 b,WASP-124,unique
+515,WASP-126 b,WASP-126,unique
+516,WASP-127 b,WASP-127,unique
+517,WASP-129 b,WASP-129,unique
+518,WASP-130 b,WASP-130,unique
+519,WASP-131 b,WASP-131,unique
+520,WASP-132 b,WASP-132,unique
+521,WASP-133 b,WASP-133,unique
+522,WASP-135 b,WASP-135,unique
+523,WASP-136 b,WASP-136,unique
+524,HD 212301 b,HD 212301,unique
+525,WASP-140 b,WASP-140,unique
+526,WASP-141 b,WASP-141,unique
+527,WASP-142 b,WASP-142,unique
+528,WASP-15 b,WASP-15,unique
+529,WASP-151 b,WASP-151,unique
+530,WASP-153 b,WASP-153,unique
+531,WASP-156 b,WASP-156,unique
+532,WASP-157 b,WASP-157,unique
+533,,,none
+534,WASP-167 b,WASP-167,unique
+535,,,none
+536,WASP-18 b,WASP-18,unique
+537,WASP-19 b,WASP-19,unique
+538,WASP-2 b,WASP-2,unique
+539,,,ambiguous
+540,WASP-21 b,WASP-21,unique
+541,WASP-22 b,WASP-22,unique
+542,WASP-23 b,WASP-23,unique
+543,,,none
+544,WASP-25 b,WASP-25,unique
+545,Kepler-1061 b,Kepler-1061,unique
+546,WASP-28 b,WASP-28,unique
+547,,,none
+548,WASP-3 b,WASP-3,unique
+549,WASP-31 b,WASP-31,unique
+550,Kepler-1594 b,Kepler-1594,unique
+551,WASP-33 b,WASP-33,unique
+552,WASP-34 b,WASP-34,unique
+553,WASP-36 b,WASP-36,unique
+554,WASP-37 b,WASP-37,unique
+555,,,none
+556,WASP-39 b,WASP-39,unique
+557,WASP-4 b,WASP-4,unique
+558,Gaia-1 b,Gaia-1,unique
+559,,,none
+560,WASP-44 b,WASP-44,unique
+561,WASP-45 b,WASP-45,unique
+562,,,none
+563,WASP-47 b,WASP-47,unique
+564,WASP-47 d,WASP-47,unique
+565,WASP-47 e,WASP-47,unique
+566,,,none
+567,WASP-5 b,WASP-5,unique
+568,WASP-50 b,WASP-50,unique
+569,WASP-52 b,WASP-52,unique
+570,WASP-53 b,WASP-53,unique
+571,WASP-55 b,WASP-55,unique
+572,WASP-58 b,WASP-58,unique
+573,,,none
+574,WASP-6 b,WASP-6,unique
+575,,,ambiguous
+576,,,none
+577,,,ambiguous
+578,WASP-63 b,WASP-63,unique
+579,WASP-66 b,WASP-66,unique
+580,WASP-67 b,WASP-67,unique
+581,WASP-69 b,WASP-69,unique
+582,WASP-7 b,WASP-7,unique
+583,WASP-70 A b,WASP-70 A,unique
+584,,,none
+585,WASP-72 b,WASP-72,unique
+586,,,none
+587,,,none
+588,WASP-76 b,WASP-76,unique
+589,WASP-77 A b,WASP-77 A,unique
+590,WASP-78 b,WASP-78,unique
+591,,,none
+592,TOI-3493 b,TOI-3493,unique
+593,WASP-80 b,WASP-80,unique
+594,WASP-81 b,WASP-81,unique
+595,WASP-82 b,WASP-82,unique
+596,Kepler-1990 c,Kepler-1990,unique
+597,WASP-84 b,WASP-84,unique
+598,WASP-85 A b,WASP-85 A,unique
+599,WASP-186 b,WASP-186,unique
+600,WASP-87 b,WASP-87,unique
+601,,,none
+602,WASP-89 b,WASP-89,unique
+603,WASP-90 b,WASP-90,unique
+604,,,none
+605,WASP-92 b,WASP-92,unique
+606,WASP-93 b,WASP-93,unique
+607,,,none
+608,WASP-95 b,WASP-95,unique
+609,WASP-96 b,WASP-96,unique
+610,WASP-97 b,WASP-97,unique
+611,WASP-98 b,WASP-98,unique
+612,WASP-188 b,WASP-188,unique
+613,,,none
+614,,,none
+615,WTS-1 b,WTS-1,unique
+616,WTS-2 b,WTS-2,unique
+617,XO-2 N b,XO-2 N,unique
+618,XO-3 b,XO-3,unique
+619,,,none
+620,K2-208 b,K2-208,unique
+621,XO-6 b,XO-6,unique
+622,tau Boo b,tau Boo,unique

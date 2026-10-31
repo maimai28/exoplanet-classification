@@ -1,0 +1,19 @@
+{
+  "excluded": {
+    "radius": "etiqueta por umbral (T1)"
+  },
+  "main": [
+    "orbital_period",
+    "star_mass",
+    "star_radius",
+    "star_teff"
+  ],
+  "sensitivity_mass": [
+    "orbital_period",
+    "star_mass",
+    "star_radius",
+    "star_teff",
+    "mass"
+  ],
+  "target": "size_class"
+}

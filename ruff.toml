@@ -1,1 +1,4 @@
-/home/nimmai/dotfiles/ruff.toml
+line-length = 88
+
+[lint]
+select = ["E", "F", "I"]

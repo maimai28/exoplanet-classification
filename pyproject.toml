@@ -1,7 +1,7 @@
 [project]
 name = "exoplanet-classification"
 version = "0.1.0"
-description = "Binary classification of exoplanets (terrestrial vs. gas giant) from bulk and stellar host parameters"
+description = "Binary classification of exoplanet size class (small vs. large, R = 2 Earth radii) from orbital period and host-star parameters"
 requires-python = ">=3.14"
 dependencies = [
     "ipykernel>=7.3.0",
@@ -10,5 +10,11 @@ dependencies = [
     "numpy>=2.5.3",
     "pandas>=3.0.6",
     "scikit-learn>=1.9.1",
+    "scipy>=1.18.1",
     "seaborn>=0.13.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
 ]

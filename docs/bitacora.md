@@ -81,3 +81,4 @@ Aprobados los 4 puntos: CSV a data/raw/ con SHA-256, consulta T3 al NASA Exoplan
 - Se corrige la RAM de la ThinkCentre en el brief (Restricciones): 23 GB útiles, no 8 GB.
 - Siguiente: T6 (Tester, fase A).
 - 2026-10-22 · T8 iteración 2 (por veredicto_v1: criterios 3, 4, 9; H1/H2). Horas: X h acumuladas.
+- 2026-10-30 · T11 CUMPLE 14/14 (veredicto_v3, iteración 3). P2: Mai acepta la iteración. Horas totales: 11 h.
